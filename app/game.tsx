@@ -11,7 +11,7 @@ import { Link } from "expo-router";
 import { Mesh, MathUtils } from "three";
 
 import { useGameStore, usePlayerStore, useObstacleStore, Lane, GameState } from "../src/stores";
-import { GameOverModal } from "../src/features/ui";
+import { GameOverModal, PauseModal } from "../src/features/ui";
 import { Obstacles, LanePosition, OBSTACLE_CONSTANTS, ObstacleType } from "../src/features/enemies";
 import { GameLoop } from "../src/features/game";
 
@@ -158,6 +158,7 @@ function TrackFloor(): React.JSX.Element {
 
 export default function GameScreen(): React.JSX.Element {
     const [showDamageFlash, setShowDamageFlash] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);
     const flashOpacity = useRef(new Animated.Value(0)).current;
 
     // Store state
@@ -287,14 +288,21 @@ export default function GameScreen(): React.JSX.Element {
                     </View>
                 </View>
 
-                {/* Botão Voltar */}
-                <View style={styles.backButton}>
-                    <Link href="/" asChild>
-                        <Pressable style={styles.backButtonInner}>
-                            <Text style={styles.backButtonText}>⬅️</Text>
-                        </Pressable>
-                    </Link>
+                {/* Botão Pausar */}
+                <View style={styles.pauseButton}>
+                    <Pressable
+                        style={styles.pauseButtonInner}
+                        onPress={() => setIsPaused(true)}
+                    >
+                        <Text style={styles.pauseButtonText}>⏸️</Text>
+                    </Pressable>
                 </View>
+
+                {/* Modal de Pausa */}
+                <PauseModal
+                    visible={isPaused && !isGameOver}
+                    onResume={() => setIsPaused(false)}
+                />
 
                 {/* Instruções (web) */}
                 {Platform.OS === "web" && !isGameOver && (
@@ -395,6 +403,27 @@ const styles = StyleSheet.create({
     },
     backButtonText: {
         fontSize: 24,
+    },
+    pauseButton: {
+        position: "absolute",
+        top: 100,
+        right: 20,
+    },
+    pauseButtonInner: {
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+        backgroundColor: COLORS.primary,
+        justifyContent: "center",
+        alignItems: "center",
+        shadowColor: COLORS.primary,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 4,
+    },
+    pauseButtonText: {
+        fontSize: 22,
     },
     instructions: {
         position: "absolute",

@@ -63,20 +63,47 @@ export default function HomeScreen(): React.JSX.Element {
             {/* Botões de ação */}
             <View style={styles.buttonsArea}>
                 {/* Botão principal - JOGAR */}
-                <Link href="/game" asChild>
+                <Link href="/levels" asChild>
                     <Pressable style={styles.primaryButton}>
                         <Text style={styles.primaryButtonIcon}>🏃</Text>
                         <Text style={styles.primaryButtonText}>INICIAR CORRIDA</Text>
                     </Pressable>
                 </Link>
 
-                {/* Botão secundário - Loja */}
-                <Link href="/shop" asChild>
-                    <Pressable style={styles.secondaryButton}>
-                        <Text style={styles.secondaryButtonIcon}>🛒</Text>
-                        <Text style={styles.secondaryButtonText}>Loja da Vida</Text>
-                    </Pressable>
-                </Link>
+                {/* Grid de botões secundários */}
+                <View style={styles.secondaryGrid}>
+                    {/* Loja */}
+                    <Link href="/shop" asChild>
+                        <Pressable style={styles.gridButton}>
+                            <Text style={styles.gridButtonIcon}>🛒</Text>
+                            <Text style={styles.gridButtonText}>Loja</Text>
+                        </Pressable>
+                    </Link>
+
+                    {/* Garagem */}
+                    <Link href="/garage" asChild>
+                        <Pressable style={styles.gridButton}>
+                            <Text style={styles.gridButtonIcon}>🚗</Text>
+                            <Text style={styles.gridButtonText}>Garagem</Text>
+                        </Pressable>
+                    </Link>
+
+                    {/* Ranking */}
+                    <Link href="/ranking" asChild>
+                        <Pressable style={styles.gridButton}>
+                            <Text style={styles.gridButtonIcon}>🏆</Text>
+                            <Text style={styles.gridButtonText}>Ranking</Text>
+                        </Pressable>
+                    </Link>
+
+                    {/* Config */}
+                    <Link href="/settings" asChild>
+                        <Pressable style={styles.gridButton}>
+                            <Text style={styles.gridButtonIcon}>⚙️</Text>
+                            <Text style={styles.gridButtonText}>Config</Text>
+                        </Pressable>
+                    </Link>
+                </View>
             </View>
 
             {/* Footer */}
@@ -250,6 +277,31 @@ const styles = StyleSheet.create({
         color: COLORS.white,
         fontSize: 16,
         fontWeight: "bold",
+    },
+    secondaryGrid: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: 12,
+    },
+    gridButton: {
+        width: "47%",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "rgba(255, 255, 255, 0.05)",
+        height: 52,
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: "rgba(255, 255, 255, 0.1)",
+        gap: 8,
+    },
+    gridButtonIcon: {
+        fontSize: 18,
+    },
+    gridButtonText: {
+        color: COLORS.white,
+        fontSize: 14,
+        fontWeight: "600",
     },
     footer: {
         alignItems: "center",
