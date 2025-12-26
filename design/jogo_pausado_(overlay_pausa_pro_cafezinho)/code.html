@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Jogo Pausado - Corre da Taxa!</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f48c25",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#221910",
+                        "overlay-dark": "rgba(34, 25, 16, 0.85)", // Custom dark overlay based on bg-dark
+                        "secondary-btn": "#3a2d20", // Slightly lighter than bg-dark for buttons
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display antialiased text-white selection:bg-primary selection:text-white overflow-hidden h-screen w-full relative">
+<!-- Background Image Layer (Simulating the 3D game scene) -->
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-cover bg-center bg-no-repeat filter blur-sm scale-105" data-alt="city street chase scene blurred background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBgCMvYcOw4PZae6vYg5qt21v2TqnwBKMGY5FNaS8d3z5qnCDfDCjrMU6JkZqV8nTeSEOWdu-5Unnv3HJWBMrhaVspJEPodST2qTzD7fVF-m0-J_mO0Si1bn1bKJB5RrH12wzVW6ePqa8c0gMst72DSGNUpAhoXb8-j0YogpM8N-PTnppK29EdBQql3iFVR9cH8G0WDJQEQLBAXQF8rL_AW4zWHZ0clOZWBWRFoHNk87sdn2dhQWrDOlc3FuhfJ8b7It9eC103LuJW_');"></div>
+<!-- Dark Overlay -->
+<div class="absolute inset-0 bg-background-dark/90 backdrop-blur-sm"></div>
+</div>
+<!-- Main Content Container -->
+<div class="relative z-10 flex flex-col h-full w-full max-w-md mx-auto px-6 py-8 justify-center items-center">
+<!-- Header Section -->
+<div class="flex flex-col items-center mb-10 w-full animate-fade-in-down">
+<!-- Decorative Icon -->
+<div class="mb-4 p-4 rounded-full bg-secondary-btn/50 border border-primary/20 shadow-[0_0_15px_rgba(244,140,37,0.2)]">
+<span class="material-symbols-outlined text-primary text-5xl">
+                    coffee
+                </span>
+</div>
+<!-- Headline -->
+<h1 class="text-white tracking-tight text-3xl md:text-4xl font-bold leading-tight text-center uppercase drop-shadow-md">
+                PAUSA PARA O<br/>CAFEZINHO
+            </h1>
+<!-- Satirical Subtitle -->
+<p class="text-white/60 text-base font-normal leading-normal pt-2 text-center max-w-[80%]">
+                A economia espera por você...
+            </p>
+</div>
+<!-- Buttons Stack -->
+<div class="flex flex-col w-full gap-4 items-center">
+<!-- Primary Button: CONTINUAR CORRIDA -->
+<button class="group relative w-full flex items-center justify-center overflow-hidden rounded-xl h-14 px-6 bg-primary text-background-dark text-lg font-bold leading-normal tracking-wide shadow-lg shadow-orange-900/20 active:scale-95 transition-all duration-200 hover:brightness-110">
+<div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+<span class="material-symbols-outlined mr-2">play_arrow</span>
+<span class="relative z-10">CONTINUAR CORRIDA</span>
+</button>
+<!-- Spacer for visual separation -->
+<div class="h-2"></div>
+<!-- Secondary Button: REINICIAR -->
+<button class="w-full flex items-center justify-center rounded-xl h-12 px-6 bg-secondary-btn border border-white/5 text-white text-base font-semibold leading-normal tracking-wide hover:bg-white/10 active:scale-95 transition-all duration-200">
+<span class="material-symbols-outlined mr-2 text-white/70 text-[20px]">replay</span>
+                REINICIAR
+            </button>
+<!-- Secondary Button: CONFIGURAÇÕES -->
+<button class="w-full flex items-center justify-center rounded-xl h-12 px-6 bg-secondary-btn border border-white/5 text-white text-base font-semibold leading-normal tracking-wide hover:bg-white/10 active:scale-95 transition-all duration-200">
+<span class="material-symbols-outlined mr-2 text-white/70 text-[20px]">settings</span>
+                CONFIGURAÇÕES
+            </button>
+<!-- Tertiary Button: SAIR (Different style for destructive/exit action) -->
+<button class="w-full flex items-center justify-center rounded-xl h-12 px-6 bg-secondary-btn border border-primary/20 text-primary text-base font-bold leading-normal tracking-wide mt-2 hover:bg-primary/10 active:scale-95 transition-all duration-200">
+<span class="material-symbols-outlined mr-2 text-primary text-[20px]">logout</span>
+                SAIR PARA O MENU
+            </button>
+</div>
+<!-- Footer / Stats Mockup (Optional context) -->
+<div class="mt-auto pt-8 flex gap-8 opacity-40 text-xs font-mono text-white/80">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">monetization_on</span>
+<span>TAXAS: R$ 4.200</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">timer</span>
+<span>TEMPO: 02:31</span>
+</div>
+</div>
+</div>
+</body></html>

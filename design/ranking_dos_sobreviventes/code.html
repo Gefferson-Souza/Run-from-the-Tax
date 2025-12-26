@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ranking dos Sobreviventes</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f48c25",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#121212",
+                        "surface-dark": "#1e1e1e",
+                        "gold": "#FFD700",
+                        "silver": "#C0C0C0",
+                        "bronze": "#CD7F32",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "2rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for better look in dark mode */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121212;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 2px;
+        }
+        
+        .gold-gradient {
+            background: linear-gradient(135deg, #FFD700 0%, #FDB931 50%, #FFD700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .silver-gradient {
+            background: linear-gradient(135deg, #E0E0E0 0%, #BDBDBD 50%, #E0E0E0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bronze-gradient {
+            background: linear-gradient(135deg, #CD7F32 0%, #A0522D 50%, #CD7F32 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-white overflow-hidden h-screen flex flex-col">
+<!-- Header -->
+<div class="flex items-center p-4 pt-12 pb-2 justify-between z-10 bg-background-light dark:bg-background-dark">
+<button class="text-white flex size-10 shrink-0 items-center justify-center rounded-full active:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<div class="flex items-center gap-2">
+<h2 class="text-white text-lg font-bold leading-tight tracking-tight text-center">Ranking dos Sobreviventes</h2>
+<span class="material-symbols-outlined text-gold" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+</div>
+<div class="size-10"></div> <!-- Spacer for centering -->
+</div>
+<!-- Main Content Area with Scroll -->
+<div class="flex-1 overflow-y-auto pb-32">
+<!-- Tabs -->
+<div class="px-6 py-4 sticky top-0 bg-background-light dark:bg-background-dark z-10">
+<div class="flex h-12 w-full items-center justify-center rounded-2xl bg-surface-dark p-1 border border-white/5">
+<button class="relative flex h-full flex-1 items-center justify-center rounded-xl bg-primary shadow-lg shadow-orange-500/20 text-white text-sm font-bold transition-all">
+                    Global
+                </button>
+<button class="relative flex h-full flex-1 items-center justify-center rounded-xl text-gray-400 text-sm font-medium hover:text-white transition-all">
+                    Amigos
+                </button>
+</div>
+</div>
+<!-- Podium -->
+<div class="px-4 py-6">
+<div class="flex justify-center items-end gap-2 w-full max-w-md mx-auto relative mt-8">
+<!-- 2nd Place -->
+<div class="flex flex-col items-center w-1/3 z-10 -mr-4 mb-2">
+<div class="relative mb-2">
+<span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-surface-dark border border-gray-400 text-gray-300 text-xs font-bold px-2 py-0.5 rounded-full z-20 shadow-lg">#2</span>
+<div class="w-20 h-20 rounded-full border-[3px] border-[#C0C0C0] p-1 bg-surface-dark shadow-[0_0_15px_rgba(192,192,192,0.3)]">
+<div class="w-full h-full rounded-full bg-cover bg-center" data-alt="Avatar of a man in a suit wearing sunglasses" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBJO08DQSdNmnbVSAHvq0mbjfKmucgjy9Grdywqj6gZmzBFc9v8OQw8oESa6a_DCQOpV2lF1kYqsywkhHFN_6z1nP13cpF6u6U_UDflFl8AoQ9-Q-xEkfTkuhCryoQXNsp21oYuk54Zy3wakTsvwTd__6bE9m3L-rKLFpgdXP4ftime5kF8HChaC_HddWgWPv2mgINmUCv9SC_rG3sIgemCRD_VMmPe5jj3Sk4Q8ks-EzLhRVgcXVAnwxuP8xODhyfDTDMgdwQOYz_B");'></div>
+</div>
+</div>
+<p class="text-gray-200 text-sm font-semibold truncate max-w-full text-center">Faria Limer</p>
+<p class="text-[#C0C0C0] text-xs font-bold">R$ 850.000</p>
+</div>
+<!-- 1st Place -->
+<div class="flex flex-col items-center w-1/3 z-20 -mt-8 order-2">
+<div class="relative mb-3">
+<span class="material-symbols-outlined text-gold absolute -top-8 left-1/2 -translate-x-1/2 text-4xl drop-shadow-lg" style="font-variation-settings: 'FILL' 1;">crown</span>
+<div class="w-24 h-24 rounded-full border-[4px] border-gold p-1 bg-surface-dark shadow-[0_0_25px_rgba(255,215,0,0.4)] relative">
+<div class="w-full h-full rounded-full bg-cover bg-center" data-alt="Avatar of a man with a confident smile" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDEYwDwRaaJxDluEEjEyXJiCAiMhhLLycKwmTJPOOY0MtWu2SfLe27HPntiqHa3kjLZIVis1vgU0hIzW6mGi0Dm2CS9b7u2hTpTY1R11dqrQAuk8SPKt3mAMgRcvaH6MqPS452GKqi6F60o-K1K-07_KCHUFW9KTEr6lYRvmq4FFMNtjNJ5v6po2tV7tQAf-tIyfvg6slwBt8il55BVIfK3hv2etjuoZZVbnvUkoSTiYzaqaU4Pwh_SsXwgRimdMfLLebBxZNlG6Tj_");'></div>
+<div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600 text-black text-xs font-black px-3 py-1 rounded-full shadow-lg border border-yellow-200 whitespace-nowrap">
+                                #1
+                            </div>
+</div>
+</div>
+<p class="text-white text-base font-bold truncate max-w-full text-center mt-1">Rei do Pix</p>
+<p class="text-gold text-sm font-extrabold">R$ 999.999</p>
+</div>
+<!-- 3rd Place -->
+<div class="flex flex-col items-center w-1/3 z-10 -ml-4 mb-2 order-3">
+<div class="relative mb-2">
+<span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-surface-dark border border-orange-800 text-orange-300 text-xs font-bold px-2 py-0.5 rounded-full z-20 shadow-lg">#3</span>
+<div class="w-20 h-20 rounded-full border-[3px] border-[#CD7F32] p-1 bg-surface-dark shadow-[0_0_15px_rgba(205,127,50,0.3)]">
+<div class="w-full h-full rounded-full bg-cover bg-center" data-alt="Avatar of a gaming character with cyber features" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAEfyk8I3r2KwtuEA5OT6RuOuE6U8V-0fMB3beDV4TaMzSpWl1u0qL18RHDUJceRlRoQrqpiqza3ZcIzUvibbPq45bb_gScOCj8NEYmSJbiGWhz_SgByvPfapER3SgBtStNf-sATkeh-GWEBcalmYq3VRR7_vD7AUl66-lmZbdUg_PuI0t4RIJBDHL1vIdnl8E30nXW2rvGdLDrdLAeZ729ZvQ-ehSMYHbw5qpDEGT5GtByCzegcH10DbOZsZcB3NY5jC4_hsSn7K3p");'></div>
+</div>
+</div>
+<p class="text-gray-200 text-sm font-semibold truncate max-w-full text-center">Crypto Bro</p>
+<p class="text-[#CD7F32] text-xs font-bold">R$ 720.000</p>
+</div>
+</div>
+</div>
+<!-- Ranking List -->
+<div class="px-4 mt-2 space-y-3">
+<!-- Item 4 -->
+<div class="flex items-center gap-4 bg-surface-dark p-3 rounded-2xl border border-white/5 hover:bg-white/5 transition-colors">
+<span class="text-gray-500 font-bold w-6 text-center text-sm">4</span>
+<div class="size-10 rounded-full bg-gray-700 bg-cover bg-center border border-white/10" data-alt="Avatar of a young man" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBVjDFt313iieHX0jPtYnEOg_dkGEn1GqkCcZHXkOA3GzBmoE2gPtLhd81G58cGyMORf4crEJPEvB9XUyForWMVoXomKu9oM9J2ZsfW2bRVt29hRN4TC5YKH51I0HEYnqZXyJp3q8S_6cD1OPTTd4Fv78DdxMka5QVrEmmKyhVQhEHMJwCGNe6R7Qtiy-lXp5gRdk4-2kbxPf5wG8ZBIFeUxy2u3B7QA_2YHqIaigth8iWGCGl-nJ-iy3thxC6j1xKVbuTltVZDq6MG");'></div>
+<div class="flex-1 min-w-0">
+<p class="text-white text-sm font-semibold truncate">Sonegador Jr</p>
+<p class="text-gray-400 text-xs">Investidor de Risco</p>
+</div>
+<div class="text-primary text-sm font-bold whitespace-nowrap">R$ 600.000</div>
+</div>
+<!-- Item 5 -->
+<div class="flex items-center gap-4 bg-surface-dark p-3 rounded-2xl border border-white/5 hover:bg-white/5 transition-colors">
+<span class="text-gray-500 font-bold w-6 text-center text-sm">5</span>
+<div class="size-10 rounded-full bg-gray-700 bg-cover bg-center border border-white/10" data-alt="Avatar of a woman laughing" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCk_hczUbql3dxv92Yu4L0Gwx56vIfK5dj_fR04PvGIiCrVSI9_3QrsrTEMn6QjrC7EAx3I5M1daAStN-BvRiaqzCbIO_crvQiQmhhHZE1UkvJbZmyTc-5ADvszGLj14CPxoxy9z-n82ezB8gqew4d5_hRNB88aUx8vdpQui--zhCduzw-vJVg0I3PPryHt56NBZ7nitAeJo1HioO20QZ_wfUemBuj4kCccmytcNMipxRVagfY98KsZ_ZZMTmmDM2te1OjX4T7X3G6W");'></div>
+<div class="flex-1 min-w-0">
+<p class="text-white text-sm font-semibold truncate">Primo Rico</p>
+<p class="text-gray-400 text-xs">Coach Financeiro</p>
+</div>
+<div class="text-primary text-sm font-bold whitespace-nowrap">R$ 550.000</div>
+</div>
+<!-- Item 6 -->
+<div class="flex items-center gap-4 bg-surface-dark p-3 rounded-2xl border border-white/5 hover:bg-white/5 transition-colors">
+<span class="text-gray-500 font-bold w-6 text-center text-sm">6</span>
+<div class="size-10 rounded-full bg-gray-700 bg-cover bg-center border border-white/10" data-alt="Avatar of a man with beard" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDJS1GaHA38PW_5dg2q0nTkKds7cNR9WfmKOEUe4gbyURZ6alw3mO3iuCD6H8JH_mf6xxCFwJSKuPJxHbT5zl0XOYX3UghfWT8nSu5irMXFz6mPjFVN6FDtuvSTcwqvNZ510gME12zVSaNwICfP7g5cs3P9YA3uAKBYJ725lUVgtqaIIg2mBD0fv_4gkfX3i0UQxAulFildq2vnMaPvkwGsQO7HVJ9mVsPlCVHhGJVKQYe51VXpfiXh_BLKcoopS2Uxao9NNpg8XvxV");'></div>
+<div class="flex-1 min-w-0">
+<p class="text-white text-sm font-semibold truncate">Dona da Pensão</p>
+<p class="text-gray-400 text-xs">Empreendedora</p>
+</div>
+<div class="text-primary text-sm font-bold whitespace-nowrap">R$ 480.000</div>
+</div>
+<!-- Item 7 -->
+<div class="flex items-center gap-4 bg-surface-dark p-3 rounded-2xl border border-white/5 hover:bg-white/5 transition-colors">
+<span class="text-gray-500 font-bold w-6 text-center text-sm">7</span>
+<div class="size-10 rounded-full bg-gray-700 bg-cover bg-center border border-white/10" data-alt="Avatar of a woman with short hair" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC7PaXgYBTein4LsBCwUZxDYHdxIyfyQHeerSYbKuQukUAKSAX-Zj28yXOLlla6IL1xH6lnbBsR6gNmrn7LHSqf6NZQYlzjkWOzRiSuDkKfji6_bvQhR3DlUX_HdhwYI7aczv-8aFuR2FYfiUDtwfmJqFh8YNzY849fgs4Jknltf0S0XGkTnoTMtOtd0wIEJ4vuvDmB61jNuQiswiLSsSmhmg5E8rqnif-MVb_9gt4mbGE8JBX-k3n0wc-D25ptJmzLslaaSy7vw5WE");'></div>
+<div class="flex-1 min-w-0">
+<p class="text-white text-sm font-semibold truncate">Taxadad</p>
+<p class="text-gray-400 text-xs">Contadora</p>
+</div>
+<div class="text-primary text-sm font-bold whitespace-nowrap">R$ 320.000</div>
+</div>
+<!-- More items visualized as loading skeleton or just space to show scroll -->
+<div class="flex items-center gap-4 bg-surface-dark/50 p-3 rounded-2xl border border-white/5 opacity-50">
+<span class="text-gray-600 font-bold w-6 text-center text-sm">8</span>
+<div class="size-10 rounded-full bg-white/10 animate-pulse"></div>
+<div class="flex-1 h-4 bg-white/10 rounded animate-pulse"></div>
+<div class="w-16 h-4 bg-white/10 rounded animate-pulse"></div>
+</div>
+</div>
+</div>
+<!-- Sticky User Footer -->
+<div class="absolute bottom-6 left-4 right-4 z-50">
+<div class="bg-surface-dark p-1 rounded-2xl shadow-[0_0_20px_rgba(244,140,37,0.3)] border border-primary/50 relative overflow-hidden group">
+<!-- Glow effect background -->
+<div class="absolute inset-0 bg-primary/10 group-hover:bg-primary/20 transition-colors"></div>
+<div class="relative flex items-center gap-4 p-3 pr-4">
+<div class="flex flex-col items-center justify-center min-w-[3rem]">
+<span class="text-[10px] text-primary font-bold uppercase tracking-wider">Rank</span>
+<span class="text-white font-bold text-lg leading-none">#4502</span>
+</div>
+<div class="h-10 w-[1px] bg-white/10"></div> <!-- Divider -->
+<div class="size-12 rounded-full border-2 border-primary p-0.5 shrink-0">
+<div class="w-full h-full rounded-full bg-cover bg-center" data-alt="User avatar of a person smiling" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBJBUsb8DAVt1-xc2fMjKecIhCrP_dC8a2vh1oksSvKPM6n4P1JtUr_e1UKewMeEnTIY2e9-S0cu-tXVl-oIwLvQ0DI6ARoySxCAUGV5Jx8h27r279Wjn6Iz-veWdfzNqm8iYhKOlO0JnEjO6ysdrWvwmVVSibxZtJjOcB7jOS67K9e7va8Vdbp2GXp0qr0o5Mriy3G0LJhebeA3zZv3aHu5roM-ILr3rL_W4GKwBJTgEjmSrSaV1Zz2jVdfwCutlL8s2-K435w7xG0");'></div>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-white text-base font-bold truncate">Pagador de DARF</p>
+<p class="text-gray-400 text-xs">Cidadão Comum</p>
+</div>
+<div class="flex flex-col items-end">
+<p class="text-xs text-gray-400">Score</p>
+<p class="text-primary text-base font-extrabold whitespace-nowrap">R$ 1.250</p>
+</div>
+</div>
+</div>
+</div>
+</body></html>

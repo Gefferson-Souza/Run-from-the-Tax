@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Corre da Taxa! - Bem-vindo</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f48c25",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#221910",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hide for cleaner mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display antialiased selection:bg-primary selection:text-white overflow-hidden">
+<!-- Main Mobile Container -->
+<div class="relative flex h-screen w-full flex-col overflow-y-auto no-scrollbar max-w-md mx-auto shadow-2xl bg-background-light dark:bg-background-dark">
+<!-- Background Gradient Effect -->
+<div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent opacity-50 z-0"></div>
+<!-- Top App Bar -->
+<header class="sticky top-0 z-20 flex items-center justify-between p-4 pb-2 bg-gradient-to-b from-background-dark/90 to-transparent backdrop-blur-sm">
+<!-- Leaderboard Button -->
+<button class="flex items-center justify-center size-12 rounded-full bg-white/5 hover:bg-white/10 transition-colors text-primary active:scale-95">
+<span class="material-symbols-outlined text-3xl">emoji_events</span>
+</button>
+<!-- Currency Display (Satirical 'Credits') -->
+<div class="flex items-center gap-2 bg-black/40 border border-white/5 rounded-full px-4 py-2 backdrop-blur-md shadow-lg">
+<span class="material-symbols-outlined text-primary text-xl">monetization_on</span>
+<span class="text-white font-bold tracking-wide text-sm">R$ -450,00</span>
+</div>
+<!-- Settings Button -->
+<button class="flex items-center justify-center size-12 rounded-full bg-white/5 hover:bg-white/10 transition-colors text-white active:scale-95">
+<span class="material-symbols-outlined text-3xl">settings</span>
+</button>
+</header>
+<!-- Scrollable Content -->
+<main class="flex-1 flex flex-col items-center w-full z-10 pt-4 pb-8">
+<!-- Hero Image / Character -->
+<div class="@container w-full px-6 mb-6">
+<div class="relative w-full aspect-[4/5] flex flex-col justify-end overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10 bg-background-dark">
+<!-- Image -->
+<div class="absolute inset-0 bg-center bg-no-repeat bg-cover transform hover:scale-105 transition-transform duration-700 ease-out" data-alt="Low poly cartoon character jumping over a giant red tax stamp obstacle in a stylized city street" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCXt87bXtIL4ceD0Y7MoP7GISqWRZ2PlitGjxvRI-R7Ngyr199Hp9j57pI5HzQk4zZTUqahIs43YrivtbC06qfnltbCuubcq-phkevbhFdTbQ_7M8YFc8ACRB7RPtKb1-Y4vXTHHffMFDYjne-8lwiXP47L0-KKpyLwMjZgGEWTBcmx1OHX9146ovi4G9mE1GIzTTlhdHSH6LKfBHpfHc7w402fYfFN6-0DPItMcElV5j3byMdY_yWi9vUZkVyECIXcieowedAdgO-5");'>
+<!-- Gradient overlay for text readability -->
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/20 to-transparent"></div>
+</div>
+<!-- Floating Coins decoration -->
+<div class="absolute top-4 right-4 animate-bounce">
+<span class="material-symbols-outlined text-primary text-4xl drop-shadow-lg">savings</span>
+</div>
+</div>
+</div>
+<!-- Game Title & Tagline -->
+<div class="w-full px-6 text-center space-y-2 mb-8">
+<div class="inline-block relative">
+<h1 class="text-5xl font-black text-white leading-none tracking-tighter drop-shadow-xl uppercase italic transform -rotate-2">
+                        Corre da <br/><span class="text-primary">Taxa!</span>
+</h1>
+<!-- Decorative decorative underline/scratch -->
+<div class="h-1.5 w-full bg-primary rounded-full mt-1 transform rotate-1"></div>
+</div>
+<p class="text-gray-400 text-lg font-medium leading-tight mt-4 max-w-[280px] mx-auto">
+                    Fuja dos impostos antes que eles te peguem!
+                </p>
+<p class="text-xs text-primary/60 font-bold uppercase tracking-widest mt-2">
+                    Temporada: Inflação Alta
+                </p>
+</div>
+<!-- Action Buttons Area -->
+<div class="w-full px-6 space-y-4 mt-auto">
+<!-- Primary CTA: Start Run -->
+<button class="group relative w-full flex items-center justify-center overflow-hidden rounded-full h-16 bg-primary text-background-dark shadow-[0_0_20px_rgba(244,140,37,0.4)] hover:shadow-[0_0_30px_rgba(244,140,37,0.6)] transition-all active:scale-[0.98]">
+<div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-full"></div>
+<span class="material-symbols-outlined mr-2 text-3xl group-hover:animate-ping">directions_run</span>
+<span class="text-xl font-black tracking-wide uppercase z-10">Iniciar Corrida</span>
+</button>
+<!-- Secondary CTA: Shop -->
+<button class="w-full flex items-center justify-center rounded-full h-14 bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined mr-2 text-primary">shopping_bag</span>
+<span class="text-lg font-bold tracking-wide">Loja da Vida</span>
+</button>
+</div>
+<!-- Version Footer -->
+<div class="mt-6 text-center">
+<p class="text-[10px] text-white/20 font-mono">v1.0.4-beta • Server: Brasil-Sil-Sil</p>
+</div>
+</main>
+<!-- Bottom Safe Area Spacer -->
+<div class="h-5 w-full bg-transparent"></div>
+</div>
+</body></html>

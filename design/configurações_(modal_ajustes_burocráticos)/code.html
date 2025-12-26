@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Corre da Taxa! - Ajustes</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f48c25",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#221910",
+                        "surface-dark": "#2d2318",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #221910; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f48c25; 
+            border-radius: 4px;
+        }
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: rgba(34, 25, 16, 0.95);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark font-display antialiased overflow-hidden h-screen w-full relative">
+<!-- Game Background Simulation (Blurred Context) -->
+<div class="absolute inset-0 w-full h-full z-0 overflow-hidden">
+<!-- Abstract gradient representing a city run game level -->
+<div class="w-full h-full bg-gradient-to-br from-purple-900 via-blue-900 to-black opacity-60"></div>
+<img class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-30 blur-sm" data-alt="Abstract colorful city lights blur representing a fast paced game level" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBz5wprnN9FRbCE1Md--YPiKnPPV7JfWR1xVX8ckAFAVibN8FlYHF7kr0NvReDcHbnLd9lKZ5JOBoillpGhAr-lzxKP_lS_WBAu268AqJnAMmuYyLypnlGxQ3ir_vKlqsixa6B2hHOmrrkkoq4E2lnbj8tGkTGxuKer8dX7IgO7lToPFLyzPDD9Cwabf5ei7sjy2UJD6AjsIVl-bP1N2J-_kJxxWqsy7QjUFVrc9K_46lhTOTrl4x3KfZ4YjVnUeqKp2GXEitbx6VCJ"/>
+<!-- Simulating game UI elements in background -->
+<div class="absolute top-4 left-4 flex gap-2">
+<div class="h-8 w-24 bg-black/50 rounded-full border border-white/10"></div>
+</div>
+<div class="absolute top-4 right-4 flex gap-2">
+<div class="h-10 w-10 bg-primary rounded-full border-2 border-white shadow-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xl">pause</span>
+</div>
+</div>
+</div>
+<!-- Modal Overlay -->
+<div class="relative z-10 flex h-full w-full items-center justify-center bg-black/80 backdrop-blur-[2px] p-4">
+<!-- Modal Container -->
+<div class="relative w-full max-w-[400px] flex flex-col overflow-hidden rounded-2xl border border-primary/40 bg-[#1a120b] shadow-[0_0_40px_-10px_rgba(244,140,37,0.3)] animate-fade-in-up">
+<!-- Header -->
+<div class="flex items-center justify-between border-b border-white/5 bg-[#231a10] p-5 pb-4">
+<h2 class="text-primary text-xl font-bold leading-tight tracking-tight flex-1">
+                    Ajustes Burocráticos
+                </h2>
+<button class="group flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/5 text-white transition-colors hover:bg-primary hover:text-white">
+<span class="material-symbols-outlined group-hover:rotate-90 transition-transform duration-300">close</span>
+</button>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-5 space-y-8">
+<!-- Audio Section -->
+<section class="space-y-4">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-xl">volume_up</span>
+<h3 class="text-white text-lg font-bold">Volume</h3>
+</div>
+<!-- Slider 1: Music -->
+<div class="space-y-3">
+<div class="flex w-full items-center justify-between">
+<p class="text-white/90 text-sm font-medium">Música Tema</p>
+<p class="text-primary text-xs font-bold font-mono">80%</p>
+</div>
+<div class="group relative flex h-6 w-full items-center cursor-pointer">
+<div class="absolute h-1.5 w-full rounded-full bg-[#3d2e22]"></div>
+<div class="absolute h-1.5 rounded-full bg-primary w-[80%] shadow-[0_0_10px_rgba(244,140,37,0.5)]"></div>
+<div class="absolute left-[80%] h-5 w-5 -translate-x-1/2 rounded-full border-2 border-[#1a120b] bg-white shadow-md transition-transform group-hover:scale-110"></div>
+</div>
+</div>
+<!-- Slider 2: SFX -->
+<div class="space-y-3">
+<div class="flex w-full items-center justify-between">
+<p class="text-white/90 text-sm font-medium">Efeitos Sonoros <span class="text-white/50 text-xs font-normal ml-1">(Gritos do Leão)</span></p>
+<p class="text-primary text-xs font-bold font-mono">50%</p>
+</div>
+<div class="group relative flex h-6 w-full items-center cursor-pointer">
+<div class="absolute h-1.5 w-full rounded-full bg-[#3d2e22]"></div>
+<div class="absolute h-1.5 rounded-full bg-primary w-[50%] shadow-[0_0_10px_rgba(244,140,37,0.5)]"></div>
+<div class="absolute left-[50%] h-5 w-5 -translate-x-1/2 rounded-full border-2 border-[#1a120b] bg-white shadow-md transition-transform group-hover:scale-110"></div>
+</div>
+</div>
+</section>
+<div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+<!-- Graphics Section -->
+<section class="space-y-4">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-xl">videogame_asset</span>
+<h3 class="text-white text-lg font-bold">Gráficos</h3>
+</div>
+<!-- Toggle Switch -->
+<div class="flex items-center justify-between gap-4 p-3 rounded-xl bg-[#2d2318]/50 border border-white/5">
+<div class="flex-1">
+<p class="text-white text-sm font-medium leading-tight">Modo 'Celular do Milhão'</p>
+<p class="text-white/50 text-xs mt-1">Economia de Bateria / Baixo Gráfico</p>
+</div>
+<button class="relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 bg-primary">
+<span class="sr-only">Use setting</span>
+<span aria-hidden="true" class="pointer-events-none inline-block h-6 w-6 translate-x-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+</button>
+</div>
+</section>
+</div>
+<!-- Footer / Danger Zone -->
+<div class="bg-[#231a10] p-5 pt-4 border-t border-white/5">
+<button class="w-full relative group overflow-hidden rounded-xl border border-red-500/50 bg-red-500/5 px-4 py-3.5 text-center transition-all hover:bg-red-500/10 hover:border-red-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]">
+<span class="relative z-10 flex items-center justify-center gap-2 text-sm font-bold text-red-500 group-hover:text-red-400">
+<span class="material-symbols-outlined text-lg">warning</span>
+                        Apagar Progresso (Declarar Falência)
+                    </span>
+</button>
+<div class="mt-4 flex flex-col items-center justify-center gap-1 text-center">
+<p class="text-[10px] uppercase tracking-widest text-white/30 font-bold">Corre da Taxa!</p>
+<p class="text-xs text-white/40 font-mono">Versão 1.0.2 - Build: <span class="text-primary/60">Sonegador</span></p>
+</div>
+</div>
+</div>
+</div>
+</body></html>

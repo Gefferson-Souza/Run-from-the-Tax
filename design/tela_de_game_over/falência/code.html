@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Corre da Taxa - Game Over</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#f48c25",
+              "background-light": "#f8f7f5",
+              "background-dark": "#221910",
+              "card-dark": "#342618",
+              "text-secondary": "#cbad90"
+            },
+            fontFamily: {
+              "display": ["Spline Sans", "sans-serif"],
+              "body": ["Noto Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        /* Custom scrollbar hiding for clean UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white overflow-x-hidden antialiased">
+<!-- Main Container -->
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto shadow-2xl overflow-hidden bg-background-light dark:bg-background-dark">
+<!-- Top Bar (System Status fake) -->
+<div class="flex items-center justify-between px-6 pt-4 pb-2">
+<div class="text-sm font-medium opacity-80 text-black dark:text-white">9:41</div>
+<div class="flex gap-2 text-black dark:text-white opacity-80">
+<span class="material-symbols-outlined text-[18px]">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-[18px]">wifi</span>
+<span class="material-symbols-outlined text-[18px]">battery_full</span>
+</div>
+</div>
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto no-scrollbar pb-32">
+<!-- Headline Section: The Reason -->
+<div class="relative flex flex-col items-center pt-6 px-4">
+<div class="bg-red-600/20 text-red-500 border border-red-500/50 rounded px-3 py-1 text-xs font-bold tracking-widest uppercase mb-3 animate-pulse">
+                    Fim da Linha
+                </div>
+<h1 class="text-black dark:text-white tracking-tight text-[36px] font-black leading-[1.1] text-center uppercase drop-shadow-sm">
+                    FALÊNCIA<br/><span class="text-primary">DECRETADA!</span>
+</h1>
+<p class="text-gray-600 dark:text-text-secondary text-sm font-medium leading-relaxed pb-3 pt-2 px-6 text-center max-w-[300px]">
+                    O Leão te pegou na malha fina. Seu poder de compra chegou a zero absoluto.
+                </p>
+</div>
+<!-- Character/Visual Section -->
+<div class="px-6 py-4">
+<div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-2xl border-4 border-card-dark bg-card-dark group">
+<!-- Background effect -->
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/90 to-transparent z-10"></div>
+<!-- Main Image -->
+<div class="w-full h-full bg-center bg-cover transform transition-transform duration-700 group-hover:scale-105" data-alt="3D cartoon character looking sad with empty pockets turned inside out, surrounded by red tax forms" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCLxoMuvXBxXH1e8ZvlQZOL_XxwVqXeUTI1aC5nXUK8iREfbXh2b3brv4mg4onp6oUPd1ONBJBAvjueeE-kjK6x6xN1ww9UXhnoSOXZBfeYOs-kZX-RqpQ4OEr0FAUAjsUkFhClCd_kz-92rRIstrLGvcImwaDglrH9QTBOw8Q736ZoqPAFzrheNgim3u13G3nEhB0jvUUtF3ZepqX_qTEoqO8tXYK1G2C8eyiq90EWmD35g6MtTg_LfrfN5a0G8VzmdOkqiT3pwg_R");'>
+</div>
+<!-- Floating Badge -->
+<div class="absolute top-3 right-3 z-20 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-white/10">
+<span class="material-symbols-outlined text-red-500 text-sm">trending_down</span>
+<span class="text-xs font-bold text-white">-100% Salário</span>
+</div>
+<!-- Bottom Overlay Text -->
+<div class="absolute bottom-4 left-4 z-20">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-xl">gavel</span>
+<span class="text-xs font-bold uppercase tracking-wider text-white/80">Causa Mortis</span>
+</div>
+<p class="text-white font-bold text-lg leading-none">Sonegação Fiscal</p>
+</div>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="px-4 grid grid-cols-2 gap-3 mb-4">
+<!-- Score Stat -->
+<div class="bg-white dark:bg-card-dark p-4 rounded-xl shadow-sm border border-gray-200 dark:border-white/5 flex flex-col items-center justify-center gap-1">
+<p class="text-gray-500 dark:text-text-secondary text-xs font-bold uppercase tracking-wide">Distância</p>
+<div class="text-black dark:text-white text-3xl font-black tracking-tight">12.4km</div>
+<div class="bg-green-500/20 text-green-600 dark:text-green-400 text-[10px] font-bold px-2 py-0.5 rounded-full mt-1">
+                        Novo Recorde!
+                    </div>
+</div>
+<!-- Coins Stat -->
+<div class="bg-white dark:bg-card-dark p-4 rounded-xl shadow-sm border border-gray-200 dark:border-white/5 flex flex-col items-center justify-center gap-1">
+<p class="text-gray-500 dark:text-text-secondary text-xs font-bold uppercase tracking-wide">Patrimônio</p>
+<div class="text-primary text-3xl font-black tracking-tight flex items-center gap-1">
+<span class="text-xl">$</span>350
+                    </div>
+<div class="flex items-center gap-1 mt-1 opacity-60">
+<span class="material-symbols-outlined text-[10px] text-white">savings</span>
+<span class="text-[10px] text-white">Salvo no colchão</span>
+</div>
+</div>
+</div>
+<!-- Detailed Stats / Buffs -->
+<div class="px-4 mb-24">
+<div class="bg-white dark:bg-card-dark rounded-xl p-4 border border-gray-200 dark:border-white/5">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-black dark:text-white font-bold text-sm">Buffs Ativos</h3>
+<span class="material-symbols-outlined text-gray-400 text-sm">info</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500">
+<span class="material-symbols-outlined text-sm">visibility_off</span>
+</div>
+<div class="flex flex-col">
+<span class="text-black dark:text-white text-sm font-bold">Sonegação</span>
+<span class="text-gray-500 dark:text-text-secondary text-xs">Atrasou o leão em 2km</span>
+</div>
+</div>
+<span class="text-green-500 text-sm font-bold">+20%</span>
+</div>
+<div class="h-px bg-gray-200 dark:bg-white/5 w-full"></div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-500">
+<span class="material-symbols-outlined text-sm">rocket_launch</span>
+</div>
+<div class="flex flex-col">
+<span class="text-black dark:text-white text-sm font-bold">Fuga de Capital</span>
+<span class="text-gray-500 dark:text-text-secondary text-xs">Velocidade extra</span>
+</div>
+</div>
+<span class="text-green-500 text-sm font-bold">+15%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom Actions -->
+<div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-background-light via-background-light to-transparent dark:from-background-dark dark:via-background-dark dark:to-transparent pt-12 pb-8 px-4 flex flex-col gap-3">
+<!-- Primary Action -->
+<button class="w-full bg-primary hover:bg-orange-600 active:scale-95 transition-all text-white font-bold text-lg py-4 rounded-full shadow-[0_4px_14px_rgba(244,140,37,0.4)] flex items-center justify-center gap-3">
+<span class="material-symbols-outlined font-bold">replay</span>
+                Tentar Novamente
+            </button>
+<!-- Secondary Actions Row -->
+<div class="flex gap-3">
+<!-- Shop Button -->
+<button class="flex-1 bg-white dark:bg-[#342618] border border-gray-200 dark:border-white/10 text-black dark:text-white font-bold py-3.5 rounded-full flex items-center justify-center gap-2 active:scale-95 transition-all hover:bg-gray-50 dark:hover:bg-[#3e2e1e]">
+<span class="material-symbols-outlined text-primary">storefront</span>
+                    Loja da Vida
+                </button>
+<!-- Ad/Revive Button (Small) -->
+<button aria-label="Watch Ad to Revive" class="aspect-square bg-gray-900 dark:bg-black/40 border border-gray-200 dark:border-white/10 rounded-full flex items-center justify-center active:scale-95 transition-all">
+<span class="material-symbols-outlined text-green-400">play_circle</span>
+</button>
+</div>
+<p class="text-center text-[10px] text-gray-400 dark:text-white/30 pt-1">
+                Reviver custa 1 vídeo de propaganda duvidosa.
+            </p>
+</div>
+</div>
+</body></html>
