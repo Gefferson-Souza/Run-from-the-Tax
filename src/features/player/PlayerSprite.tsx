@@ -18,15 +18,17 @@ const FRAME_ASSETS = [
     require("../../../assets/frames/frame4.png"),
     require("../../../assets/frames/frame5.png"),
     require("../../../assets/frames/frame6.png"),
+    require("../../../assets/frames/frame7.png"),
+    require("../../../assets/frames/frame8.png"),
 ];
 /* eslint-enable @typescript-eslint/no-var-requires */
 
 /** Configuração da animação */
 const ANIM_CONFIG = {
-    /** Frames por segundo */
-    FPS: 12,
+    /** Frames por segundo - Aumentado para maior fluidez */
+    FPS: 15,
     /** Total de frames */
-    TOTAL_FRAMES: 6,
+    TOTAL_FRAMES: 8,
 } as const;
 
 /** Posições das pistas */
