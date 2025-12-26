@@ -287,12 +287,31 @@ export const COLLECTIBLE_CATALOG: readonly CollectibleConfig[] = [
 // HELPERS
 // ============================================
 
+/** IDs de tipos letais para verificação rápida */
+const LETHAL_IDS: readonly string[] = [
+    LethalType.MOTO,
+    LethalType.MAREA,
+    LethalType.PITBULL,
+    LethalType.BUEIRO,
+    LethalType.CEROL,
+];
+
+/** IDs de tipos financeiros para verificação rápida */
+const FINANCIAL_IDS: readonly string[] = [
+    FinancialType.LEAO,
+    FinancialType.PIX,
+    FinancialType.PEDAGIO,
+    FinancialType.BLUSINHAS,
+    FinancialType.IPVA,
+    FinancialType.BOLETO,
+];
+
 /** Retorna a categoria de um tipo de obstáculo */
 export function getCategory(type: ObstacleType): DamageCategory {
-    if (Object.values(LethalType).includes(type as LethalType)) {
+    if (LETHAL_IDS.includes(type as string)) {
         return DamageCategory.LETHAL;
     }
-    if (Object.values(FinancialType).includes(type as FinancialType)) {
+    if (FINANCIAL_IDS.includes(type as string)) {
         return DamageCategory.FINANCIAL;
     }
     return DamageCategory.COLLECTIBLE;

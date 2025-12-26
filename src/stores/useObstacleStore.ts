@@ -41,10 +41,10 @@ const selectObstacleType = (distance: number): ObstacleType => {
     // Ajusta pesos por distância (mais difícil com o tempo)
     const distanceMultiplier = Math.min(distance / 1000, 2); // Max 2x
 
-    // Pesos base das categorias
-    let lethalWeight = OBSTACLE_CONSTANTS.CATEGORY_WEIGHTS[DamageCategory.LETHAL];
-    let financialWeight = OBSTACLE_CONSTANTS.CATEGORY_WEIGHTS[DamageCategory.FINANCIAL];
-    let collectibleWeight = OBSTACLE_CONSTANTS.CATEGORY_WEIGHTS[DamageCategory.COLLECTIBLE];
+    // Pesos base das categorias (Number() para evitar tipo literal)
+    let lethalWeight = Number(OBSTACLE_CONSTANTS.CATEGORY_WEIGHTS[DamageCategory.LETHAL]);
+    let financialWeight = Number(OBSTACLE_CONSTANTS.CATEGORY_WEIGHTS[DamageCategory.FINANCIAL]);
+    let collectibleWeight = Number(OBSTACLE_CONSTANTS.CATEGORY_WEIGHTS[DamageCategory.COLLECTIBLE]);
 
     // Ajuste progressivo
     lethalWeight += distanceMultiplier * 5;
