@@ -33,6 +33,9 @@ const LANE_TO_POSITION: Readonly<Record<Lane, LanePosition>> = {
 const PLAYER_Z = 0;
 const DISTANCE_MULTIPLIER = 15;
 
+import { SoundEffect } from "../audio/audio.types";
+import { useGameAudio } from "../audio/useGameAudio";
+
 interface GameLoopProps {
     readonly onTaxCollision?: () => void;
     readonly onCoinCollected?: () => void;
@@ -50,6 +53,7 @@ export function GameLoop({
     const gameStore = useGameStore;
     const playerStore = usePlayerStore;
     const obstacleStore = useObstacleStore;
+    const { playSfx } = useGameAudio(); // Hook de Áudio
 
     useFrame((_, delta) => {
         const state = gameStore.getState();
@@ -107,6 +111,7 @@ export function GameLoop({
                     case DamageCategory.LETHAL:
                         removeObstacle(obs.id);
                         dieFromCollision();
+                        playSfx(SoundEffect.GAME_OVER);
                         onDeath?.();
                         break;
 
@@ -126,6 +131,7 @@ export function GameLoop({
                             loseMoney(100); // Fallback
                         }
                         removeObstacle(obs.id);
+                        playSfx(SoundEffect.CRASH_FINANCIAL);
                         onTaxCollision?.();
                         break;
                     }
@@ -143,6 +149,7 @@ export function GameLoop({
                             addMoney(50); // Fallback
                         }
                         removeObstacle(obs.id);
+                        playSfx(SoundEffect.COLLECT_COIN);
                         onCoinCollected?.();
                         break;
                     }

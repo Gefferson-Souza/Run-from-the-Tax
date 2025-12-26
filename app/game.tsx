@@ -3,20 +3,26 @@
  * Inclui: Canvas, Player, Track, Obstacles, GameLoop, HUD
  */
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { View, Text, Pressable, StyleSheet, Dimensions, Platform, Animated } from "react-native";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { Link } from "expo-router";
-import { Mesh, MathUtils } from "three";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { useGameStore, usePlayerStore, useObstacleStore, Lane, GameState } from "../src/stores";
+import { useGameStore, usePlayerStore, useObstacleStore, GameState } from "../src/stores";
 import { GameOverModal, PauseModal } from "../src/features/ui";
-import { Obstacles, LanePosition, OBSTACLE_CONSTANTS, ObstacleType } from "../src/features/enemies";
-import { GameLoop } from "../src/features/game";
-import { PlayerSprite } from "../src/features/player";
+import { GameLoop } from "../src/features/game/GameLoop";
+import { PlayerSprite } from "../src/features/player/PlayerSprite";
+import { Scenery } from "../src/features/environment/Scenery";
+import { Track } from "../src/features/track/Track";
+import { Obstacles } from "../src/features/enemies/Obstacles";
+import { useGameAudio } from "../src/features/audio/useGameAudio";
+import { useBiome } from "../src/features/game/useBiome";
 
-/** Cores do jogo */
+// ============================================
+// Constants
+// ============================================
+
 const COLORS = {
     primary: "#f48c25",
     backgroundDark: "#221910",
@@ -26,141 +32,22 @@ const COLORS = {
     green: "#22c55e",
 } as const;
 
-/** Posições X das pistas */
-const LANE_POSITIONS: Readonly<Record<Lane, number>> = {
-    [Lane.LEFT]: -2,
-    [Lane.CENTER]: 0,
-    [Lane.RIGHT]: 2,
-} as const;
-
 const SWIPE_THRESHOLD = 50;
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
-
-// ============================================
-// Componentes 3D
-// ============================================
-
-/** Constantes de animação do player */
-const PLAYER_ANIM = {
-    /** Velocidade do bounce (quicar) */
-    BOUNCE_SPEED: 12,
-    /** Altura do bounce */
-    BOUNCE_HEIGHT: 0.08,
-    /** Altura base do player */
-    BASE_Y: 0.5,
-    /** Velocidade de interpolação horizontal */
-    LANE_LERP: 0.15,
-    /** Inclinação máxima ao mudar de pista (rad) */
-    MAX_LEAN: 0.15,
-    /** Velocidade de interpolação da inclinação */
-    LEAN_LERP: 0.1,
-} as const;
-
-function PlayerCube(): React.JSX.Element {
-    const meshRef = useRef<Mesh>(null);
-    const currentLane = usePlayerStore((state) => state.currentLane);
-    const isJumping = usePlayerStore((state) => state.isJumping);
-    const land = usePlayerStore((state) => state.land);
-    const jumpProgressRef = useRef<number>(0);
-    const prevLaneRef = useRef<Lane>(currentLane);
-    const leanRef = useRef<number>(0);
-
-    useFrame(({ clock }) => {
-        if (!meshRef.current) return;
-
-        const t = clock.getElapsedTime();
-
-        // Movimento horizontal suave
-        const targetX = LANE_POSITIONS[currentLane];
-        meshRef.current.position.x = MathUtils.lerp(
-            meshRef.current.position.x,
-            targetX,
-            PLAYER_ANIM.LANE_LERP
-        );
-
-        // Detecta mudança de pista para inclinação
-        if (currentLane !== prevLaneRef.current) {
-            // Inclina na direção do movimento
-            if (currentLane < prevLaneRef.current) {
-                leanRef.current = PLAYER_ANIM.MAX_LEAN; // Indo para esquerda
-            } else {
-                leanRef.current = -PLAYER_ANIM.MAX_LEAN; // Indo para direita
-            }
-            prevLaneRef.current = currentLane;
-        }
-
-        // Interpola inclinação de volta para 0
-        leanRef.current = MathUtils.lerp(leanRef.current, 0, PLAYER_ANIM.LEAN_LERP);
-        meshRef.current.rotation.z = leanRef.current;
-
-        // Lógica de pulo
-        if (isJumping) {
-            jumpProgressRef.current += 0.08;
-            const jumpArc = Math.sin(jumpProgressRef.current * Math.PI);
-            meshRef.current.position.y = PLAYER_ANIM.BASE_Y + jumpArc * 2;
-
-            if (jumpProgressRef.current >= 1) {
-                jumpProgressRef.current = 0;
-                meshRef.current.position.y = PLAYER_ANIM.BASE_Y;
-                land();
-            }
-        } else {
-            // Bounce de corrida (quicar) - só quando não está pulando
-            const bounce = Math.sin(t * PLAYER_ANIM.BOUNCE_SPEED) * PLAYER_ANIM.BOUNCE_HEIGHT;
-            meshRef.current.position.y = PLAYER_ANIM.BASE_Y + Math.abs(bounce);
-        }
-    });
-
-    return (
-        <mesh ref={meshRef} position={[0, 0.5, 0]} castShadow>
-            <boxGeometry args={[0.8, 1, 0.8]} />
-            <meshStandardMaterial color={COLORS.primary} />
-        </mesh>
-    );
-}
-
-function TrackFloor(): React.JSX.Element {
-    const textureOffsetRef = useRef<number>(0);
-    const speed = useGameStore((state) => state.speed);
-
-    useFrame((_, delta) => {
-        textureOffsetRef.current += speed * delta * 2;
-    });
-
-    return (
-        <group>
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -25]} receiveShadow>
-                <planeGeometry args={[8, 100]} />
-                <meshStandardMaterial color={COLORS.trackGray} />
-            </mesh>
-
-            {/* Linhas laterais */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-2.7, 0.01, -25]}>
-                <planeGeometry args={[0.1, 100]} />
-                <meshStandardMaterial color={COLORS.white} />
-            </mesh>
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[2.7, 0.01, -25]}>
-                <planeGeometry args={[0.1, 100]} />
-                <meshStandardMaterial color={COLORS.white} />
-            </mesh>
-
-            {/* Chão infinito */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
-                <planeGeometry args={[200, 200]} />
-                <meshStandardMaterial color="#1a1a1a" />
-            </mesh>
-        </group>
-    );
-}
 
 // ============================================
 // Componente Principal
 // ============================================
 
 export default function GameScreen(): React.JSX.Element {
+    const insets = useSafeAreaInsets();
     const [showDamageFlash, setShowDamageFlash] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
     const flashOpacity = useRef(new Animated.Value(0)).current;
+
+    // Hooks Customizados
+    const { playMusic } = useGameAudio();
+    const currentBiome = useBiome();
 
     // Store state
     const startGame = useGameStore((state) => state.startGame);
@@ -169,11 +56,19 @@ export default function GameScreen(): React.JSX.Element {
     const score = useGameStore((state) => state.score);
     const resetObstacles = useObstacleStore((state) => state.resetObstacles);
 
-    const isGameOver = gameState === GameState.GAME_OVER;
-
+    // Player Actions
     const moveLeft = usePlayerStore((state) => state.moveLeft);
     const moveRight = usePlayerStore((state) => state.moveRight);
     const jump = usePlayerStore((state) => state.jump);
+
+    const isGameOver = gameState === GameState.GAME_OVER;
+
+    // Efeito de Música Dinâmica
+    useEffect(() => {
+        if (currentBiome?.musicTrack) {
+            playMusic(currentBiome.musicTrack);
+        }
+    }, [currentBiome.id, playMusic, currentBiome?.musicTrack]);
 
     // Inicia o jogo
     useEffect(() => {
@@ -188,7 +83,7 @@ export default function GameScreen(): React.JSX.Element {
             Animated.timing(flashOpacity, {
                 toValue: 0.5,
                 duration: 100,
-                useNativeDriver: true,
+                useNativeDriver: true, // Web support checked implicitly, native driver safe for opacity
             }),
             Animated.timing(flashOpacity, {
                 toValue: 0,
@@ -199,10 +94,10 @@ export default function GameScreen(): React.JSX.Element {
     }, [flashOpacity]);
 
     const handleCoinCollected = useCallback(() => {
-        // Poderia adicionar efeito visual de coleta aqui
+        // Poderia adicionar efeito visual de coleta aqui na UI 2D se quiser
     }, []);
 
-    // Gesture handler
+    // Gesture handler (Swipe)
     const panGesture = Gesture.Pan().onEnd((event) => {
         const { translationX, translationY } = event;
         if (Math.abs(translationX) > SWIPE_THRESHOLD) {
@@ -249,7 +144,7 @@ export default function GameScreen(): React.JSX.Element {
                     style={styles.canvas}
                     gl={{ antialias: true }}
                 >
-                    <color attach="background" args={["#0a0a0a"]} />
+                    <color attach="background" args={[currentBiome.fogColor]} />
 
                     {/* Luzes */}
                     <ambientLight intensity={0.5} />
@@ -257,7 +152,8 @@ export default function GameScreen(): React.JSX.Element {
                     <directionalLight position={[5, 10, 5]} intensity={0.8} castShadow />
 
                     {/* Cena */}
-                    <TrackFloor />
+                    <Track />
+                    <Scenery />
                     <PlayerSprite />
                     <Obstacles />
 
@@ -277,7 +173,7 @@ export default function GameScreen(): React.JSX.Element {
                 )}
 
                 {/* HUD - Dinheiro */}
-                <View style={styles.hudTop}>
+                <View style={[styles.hudTop, { top: insets.top + 10 }]}>
                     <View style={styles.moneyBadge}>
                         <Text style={styles.moneyIcon}>💰</Text>
                         <Text style={[styles.moneyText, currentMoney < 0 && styles.moneyNegative]}>
@@ -290,7 +186,7 @@ export default function GameScreen(): React.JSX.Element {
                 </View>
 
                 {/* Botão Pausar */}
-                <View style={styles.pauseButton}>
+                <View style={[styles.pauseButton, { top: insets.top + 60 }]}>
                     <Pressable
                         style={styles.pauseButtonInner}
                         onPress={() => setIsPaused(true)}
@@ -353,6 +249,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
+        zIndex: 10,
     },
     moneyBadge: {
         flexDirection: "row",
@@ -389,26 +286,10 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 18,
     },
-    backButton: {
-        position: "absolute",
-        top: 100,
-        left: 20,
-    },
-    backButtonInner: {
-        width: 48,
-        height: 48,
-        borderRadius: 24,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    backButtonText: {
-        fontSize: 24,
-    },
     pauseButton: {
         position: "absolute",
-        top: 100,
         right: 20,
+        zIndex: 10,
     },
     pauseButtonInner: {
         width: 48,

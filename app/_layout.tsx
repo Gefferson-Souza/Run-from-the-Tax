@@ -1,4 +1,4 @@
-import "../global.css";
+// NativeWind/Tailwind removido - usando StyleSheet nativo
 
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
