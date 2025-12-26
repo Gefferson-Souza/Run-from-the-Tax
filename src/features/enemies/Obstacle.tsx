@@ -1,9 +1,6 @@
 /**
- * @fileoverview Obstacle Component - Renderiza DANGER, TAX ou COIN
- * Animações procedurais:
- * - COIN: Gira e flutua suavemente
- * - DANGER: Pulsa ameaçadoramente
- * - TAX: Vibra sutilmente
+ * @fileoverview Obstacle Component - Renderiza qualquer tipo de obstáculo
+ * Suporta LETHAL, FINANCIAL e COLLECTIBLE com visuais e animações diferentes
  */
 
 import { useRef } from "react";
@@ -12,8 +9,16 @@ import { Mesh, MathUtils } from "three";
 import {
     ObstacleType,
     LanePosition,
+    DamageCategory,
     OBSTACLE_CONSTANTS,
-    OBSTACLE_COLORS,
+    CATEGORY_COLORS,
+    getCategory,
+    getLethalConfig,
+    getFinancialConfig,
+    getCollectibleConfig,
+    LethalType,
+    FinancialType,
+    CollectibleType,
 } from "./obstacle.types";
 
 interface ObstacleProps {
@@ -25,21 +30,35 @@ interface ObstacleProps {
 
 /** Constantes de animação */
 const ANIM = {
-    /** Moeda: velocidade de rotação */
+    // Coletáveis
     COIN_SPIN: 3,
-    /** Moeda: velocidade de flutuação */
     COIN_FLOAT_SPEED: 4,
-    /** Moeda: altura de flutuação */
     COIN_FLOAT_HEIGHT: 0.15,
-    /** Moeda: altura base */
     COIN_BASE_Y: 0.8,
-    /** Danger: velocidade de rotação */
+    // Letais
     DANGER_SPIN: 1.5,
-    /** Danger: intensidade do pulse */
     DANGER_PULSE: 0.2,
-    /** Tax: intensidade da vibração */
+    // Financeiros
     TAX_SHAKE: 0.02,
 } as const;
+
+/** Obtém a cor do obstáculo */
+function getObstacleColor(type: ObstacleType): string {
+    const category = getCategory(type);
+
+    // Tenta obter cor específica do catálogo
+    const lethalConfig = getLethalConfig(type as LethalType);
+    if (lethalConfig) return lethalConfig.color;
+
+    const financialConfig = getFinancialConfig(type as FinancialType);
+    if (financialConfig) return financialConfig.color;
+
+    const collectibleConfig = getCollectibleConfig(type as CollectibleType);
+    if (collectibleConfig) return collectibleConfig.color;
+
+    // Fallback para cor da categoria
+    return CATEGORY_COLORS[category];
+}
 
 export function Obstacle({
     type,
@@ -48,33 +67,33 @@ export function Obstacle({
     isCollected,
 }: ObstacleProps): React.JSX.Element | null {
     const meshRef = useRef<Mesh>(null);
-
-    // Posição X baseada na pista
+    const category = getCategory(type);
+    const color = getObstacleColor(type);
     const xPosition = OBSTACLE_CONSTANTS.LANE_X_POSITIONS[lane];
 
-    // Animações por tipo
+    // Animações por categoria
     useFrame(({ clock }) => {
         if (!meshRef.current) return;
 
         const t = clock.getElapsedTime();
 
-        switch (type) {
-            case ObstacleType.COIN:
+        switch (category) {
+            case DamageCategory.COLLECTIBLE:
                 // Gira e flutua
                 meshRef.current.rotation.y += ANIM.COIN_SPIN * 0.016;
                 meshRef.current.position.y =
                     ANIM.COIN_BASE_Y + Math.sin(t * ANIM.COIN_FLOAT_SPEED) * ANIM.COIN_FLOAT_HEIGHT;
                 break;
 
-            case ObstacleType.DANGER:
-                // Gira e pulsa (escala oscilante)
+            case DamageCategory.LETHAL:
+                // Gira e pulsa
                 meshRef.current.rotation.y += ANIM.DANGER_SPIN * 0.016;
                 const pulse = 1 + Math.sin(t * 6) * ANIM.DANGER_PULSE;
                 meshRef.current.scale.setScalar(pulse);
                 break;
 
-            case ObstacleType.TAX:
-                // Vibra sutilmente (shake)
+            case DamageCategory.FINANCIAL:
+                // Vibra sutilmente
                 meshRef.current.position.x =
                     xPosition + Math.sin(t * 20) * ANIM.TAX_SHAKE;
                 break;
@@ -84,8 +103,8 @@ export function Obstacle({
     // Não renderiza se foi coletado
     if (isCollected) return null;
 
-    // DANGER: Pirâmide roxa ameaçadora
-    if (type === ObstacleType.DANGER) {
+    // LETHAL: Pirâmide ameaçadora
+    if (category === DamageCategory.LETHAL) {
         return (
             <mesh
                 ref={meshRef}
@@ -94,16 +113,16 @@ export function Obstacle({
             >
                 <coneGeometry args={[0.6, 1.5, 4]} />
                 <meshStandardMaterial
-                    color={OBSTACLE_COLORS.DANGER}
-                    emissive={OBSTACLE_COLORS.DANGER}
+                    color={color}
+                    emissive={color}
                     emissiveIntensity={0.6}
                 />
             </mesh>
         );
     }
 
-    // TAX: Cubo vermelho com cifrão
-    if (type === ObstacleType.TAX) {
+    // FINANCIAL: Cubo
+    if (category === DamageCategory.FINANCIAL) {
         return (
             <mesh
                 ref={meshRef}
@@ -112,15 +131,15 @@ export function Obstacle({
             >
                 <boxGeometry args={[1, 1.2, 0.5]} />
                 <meshStandardMaterial
-                    color={OBSTACLE_COLORS.TAX}
-                    emissive={OBSTACLE_COLORS.TAX}
+                    color={color}
+                    emissive={color}
                     emissiveIntensity={0.3}
                 />
             </mesh>
         );
     }
 
-    // COIN: Cilindro dourado girando e flutuando
+    // COLLECTIBLE: Cilindro girando
     return (
         <mesh
             ref={meshRef}
@@ -130,8 +149,8 @@ export function Obstacle({
         >
             <cylinderGeometry args={[0.4, 0.4, 0.1, 16]} />
             <meshStandardMaterial
-                color={OBSTACLE_COLORS.COIN}
-                emissive={OBSTACLE_COLORS.COIN}
+                color={color}
+                emissive={color}
                 emissiveIntensity={0.5}
                 metalness={0.9}
                 roughness={0.1}

@@ -1,7 +1,6 @@
 /**
- * @fileoverview Obstacle Store - Gerencia o array de obstáculos em jogo
- * Performance: Usa zustand para evitar re-renders desnecessários
- * Memory: Remove obstáculos que passaram da câmera
+ * @fileoverview Obstacle Store - Sistema de spawn inteligente
+ * Spawna obstáculos baseado em pesos e dificuldade progressiva
  */
 
 import { create } from "zustand";
@@ -9,10 +8,22 @@ import {
     ObstacleData,
     ObstacleType,
     LanePosition,
+    DamageCategory,
+    LethalType,
+    FinancialType,
+    CollectibleType,
+    LETHAL_CATALOG,
+    FINANCIAL_CATALOG,
+    COLLECTIBLE_CATALOG,
     OBSTACLE_CONSTANTS,
+    getCategory,
 } from "../features/enemies/obstacle.types";
 
-/** Gera ID único sem dependências externas */
+// ============================================
+// HELPERS DE SPAWN
+// ============================================
+
+/** Gera ID único */
 const generateId = (): string =>
     `obs_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 
@@ -22,46 +33,100 @@ const getRandomLane = (): LanePosition => {
     return lanes[Math.floor(Math.random() * lanes.length)] as LanePosition;
 };
 
-/** Retorna tipo de obstáculo baseado em probabilidade */
-const getRandomObstacleType = (): ObstacleType => {
-    const roll = Math.random();
-    const { SPAWN_CHANCES } = OBSTACLE_CONSTANTS;
+/**
+ * Seleciona um tipo de obstáculo baseado nos pesos
+ * Ajusta pesos conforme a distância percorrida
+ */
+const selectObstacleType = (distance: number): ObstacleType => {
+    // Ajusta pesos por distância (mais difícil com o tempo)
+    const distanceMultiplier = Math.min(distance / 1000, 2); // Max 2x
 
-    // 15% DANGER (morte instantânea)
-    if (roll < SPAWN_CHANCES.DANGER) {
-        return ObstacleType.DANGER;
+    // Pesos base das categorias
+    let lethalWeight = OBSTACLE_CONSTANTS.CATEGORY_WEIGHTS[DamageCategory.LETHAL];
+    let financialWeight = OBSTACLE_CONSTANTS.CATEGORY_WEIGHTS[DamageCategory.FINANCIAL];
+    let collectibleWeight = OBSTACLE_CONSTANTS.CATEGORY_WEIGHTS[DamageCategory.COLLECTIBLE];
+
+    // Ajuste progressivo
+    lethalWeight += distanceMultiplier * 5;
+    financialWeight += distanceMultiplier * 10;
+    collectibleWeight -= distanceMultiplier * 10;
+    collectibleWeight = Math.max(collectibleWeight, 15); // Mínimo 15%
+
+    // Normaliza para 100%
+    const total = lethalWeight + financialWeight + collectibleWeight;
+    lethalWeight = (lethalWeight / total) * 100;
+    financialWeight = (financialWeight / total) * 100;
+    collectibleWeight = (collectibleWeight / total) * 100;
+
+    // Rola o dado
+    const roll = Math.random() * 100;
+
+    let selectedCategory: DamageCategory;
+    if (roll < lethalWeight) {
+        selectedCategory = DamageCategory.LETHAL;
+    } else if (roll < lethalWeight + financialWeight) {
+        selectedCategory = DamageCategory.FINANCIAL;
+    } else {
+        selectedCategory = DamageCategory.COLLECTIBLE;
     }
-    // 60% TAX (dano financeiro)
-    if (roll < SPAWN_CHANCES.DANGER + SPAWN_CHANCES.TAX) {
-        return ObstacleType.TAX;
-    }
-    // 25% COIN (coletável)
-    return ObstacleType.COIN;
+
+    // Seleciona o tipo específico baseado nos pesos internos
+    return selectTypeFromCategory(selectedCategory);
 };
 
+/** Seleciona um tipo específico de uma categoria baseado em pesos */
+const selectTypeFromCategory = (category: DamageCategory): ObstacleType => {
+    let catalog: readonly { id: ObstacleType; spawnWeight: number }[];
+
+    switch (category) {
+        case DamageCategory.LETHAL:
+            catalog = LETHAL_CATALOG;
+            break;
+        case DamageCategory.FINANCIAL:
+            catalog = FINANCIAL_CATALOG;
+            break;
+        case DamageCategory.COLLECTIBLE:
+            catalog = COLLECTIBLE_CATALOG;
+            break;
+    }
+
+    // Calcula peso total
+    const totalWeight = catalog.reduce((sum, item) => sum + item.spawnWeight, 0);
+
+    // Rola o dado
+    let roll = Math.random() * totalWeight;
+
+    // Seleciona baseado no peso
+    for (const item of catalog) {
+        roll -= item.spawnWeight;
+        if (roll <= 0) {
+            return item.id;
+        }
+    }
+
+    // Fallback
+    return catalog[0].id;
+};
+
+// ============================================
+// STORE
+// ============================================
+
 interface ObstacleStoreState {
-    /** Array de obstáculos ativos */
     readonly obstacles: readonly ObstacleData[];
-    /** Último tempo de spawn (para controle de intervalo) */
     readonly lastSpawnTime: number;
-    /** Intervalo atual de spawn (diminui com o tempo) */
     readonly spawnInterval: number;
+    readonly waveCount: number;
+    readonly obstaclesThisWave: number;
 }
 
 interface ObstacleStoreActions {
-    /** Spawna um novo obstáculo */
-    spawnObstacle: () => void;
-    /** Atualiza posição de todos os obstáculos */
+    spawnObstacle: (distance?: number) => void;
     updateObstacles: (deltaZ: number) => ReadonlyArray<ObstacleData>;
-    /** Remove obstáculos que passaram da câmera */
     cleanupObstacles: () => void;
-    /** Marca obstáculo como coletado */
     collectObstacle: (id: string) => void;
-    /** Remove obstáculo por ID */
     removeObstacle: (id: string) => void;
-    /** Reseta todos os obstáculos (novo jogo) */
     resetObstacles: () => void;
-    /** Diminui intervalo de spawn (aumenta dificuldade) */
     decreaseSpawnInterval: () => void;
 }
 
@@ -71,15 +136,38 @@ const INITIAL_STATE: ObstacleStoreState = {
     obstacles: [],
     lastSpawnTime: 0,
     spawnInterval: OBSTACLE_CONSTANTS.BASE_SPAWN_INTERVAL_MS,
+    waveCount: 0,
+    obstaclesThisWave: 0,
 };
 
 export const useObstacleStore = create<ObstacleStore>((set, get) => ({
     ...INITIAL_STATE,
 
-    spawnObstacle: () => {
+    spawnObstacle: (distance = 0) => {
+        const { waveCount, obstaclesThisWave, obstacles } = get();
+
+        // Regra: Max 2 obstáculos por onda
+        if (obstaclesThisWave >= 2) {
+            set({ obstaclesThisWave: 0, waveCount: waveCount + 1 });
+        }
+
+        // Regra: Não spawna LETHAL nas primeiras 3 ondas
+        let type = selectObstacleType(distance);
+        if (waveCount < 3 && getCategory(type) === DamageCategory.LETHAL) {
+            type = selectTypeFromCategory(DamageCategory.FINANCIAL);
+        }
+
+        // Regra: Não spawna 2 LETHAL na mesma onda
+        const hasLethalThisWave = obstacles.some(
+            (o) => getCategory(o.type) === DamageCategory.LETHAL && o.zPosition < -30
+        );
+        if (hasLethalThisWave && getCategory(type) === DamageCategory.LETHAL) {
+            type = selectTypeFromCategory(DamageCategory.FINANCIAL);
+        }
+
         const newObstacle: ObstacleData = {
             id: generateId(),
-            type: getRandomObstacleType(),
+            type,
             lane: getRandomLane(),
             zPosition: OBSTACLE_CONSTANTS.SPAWN_Z,
             isCollected: false,
@@ -88,18 +176,16 @@ export const useObstacleStore = create<ObstacleStore>((set, get) => ({
         set((state) => ({
             obstacles: [...state.obstacles, newObstacle],
             lastSpawnTime: Date.now(),
+            obstaclesThisWave: state.obstaclesThisWave + 1,
         }));
     },
 
     updateObstacles: (deltaZ: number) => {
         const { obstacles } = get();
-
-        // Atualiza posições diretamente (mutação controlada para performance)
         const updatedObstacles = obstacles.map((obs) => ({
             ...obs,
             zPosition: obs.zPosition + deltaZ,
         }));
-
         set({ obstacles: updatedObstacles });
         return updatedObstacles;
     },
