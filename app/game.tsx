@@ -39,35 +39,74 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 // Componentes 3D
 // ============================================
 
+/** Constantes de animação do player */
+const PLAYER_ANIM = {
+    /** Velocidade do bounce (quicar) */
+    BOUNCE_SPEED: 12,
+    /** Altura do bounce */
+    BOUNCE_HEIGHT: 0.08,
+    /** Altura base do player */
+    BASE_Y: 0.5,
+    /** Velocidade de interpolação horizontal */
+    LANE_LERP: 0.15,
+    /** Inclinação máxima ao mudar de pista (rad) */
+    MAX_LEAN: 0.15,
+    /** Velocidade de interpolação da inclinação */
+    LEAN_LERP: 0.1,
+} as const;
+
 function PlayerCube(): React.JSX.Element {
     const meshRef = useRef<Mesh>(null);
     const currentLane = usePlayerStore((state) => state.currentLane);
     const isJumping = usePlayerStore((state) => state.isJumping);
     const land = usePlayerStore((state) => state.land);
     const jumpProgressRef = useRef<number>(0);
+    const prevLaneRef = useRef<Lane>(currentLane);
+    const leanRef = useRef<number>(0);
 
-    useFrame(() => {
+    useFrame(({ clock }) => {
         if (!meshRef.current) return;
+
+        const t = clock.getElapsedTime();
 
         // Movimento horizontal suave
         const targetX = LANE_POSITIONS[currentLane];
         meshRef.current.position.x = MathUtils.lerp(
             meshRef.current.position.x,
             targetX,
-            0.15
+            PLAYER_ANIM.LANE_LERP
         );
+
+        // Detecta mudança de pista para inclinação
+        if (currentLane !== prevLaneRef.current) {
+            // Inclina na direção do movimento
+            if (currentLane < prevLaneRef.current) {
+                leanRef.current = PLAYER_ANIM.MAX_LEAN; // Indo para esquerda
+            } else {
+                leanRef.current = -PLAYER_ANIM.MAX_LEAN; // Indo para direita
+            }
+            prevLaneRef.current = currentLane;
+        }
+
+        // Interpola inclinação de volta para 0
+        leanRef.current = MathUtils.lerp(leanRef.current, 0, PLAYER_ANIM.LEAN_LERP);
+        meshRef.current.rotation.z = leanRef.current;
 
         // Lógica de pulo
         if (isJumping) {
             jumpProgressRef.current += 0.08;
             const jumpArc = Math.sin(jumpProgressRef.current * Math.PI);
-            meshRef.current.position.y = 0.5 + jumpArc * 2;
+            meshRef.current.position.y = PLAYER_ANIM.BASE_Y + jumpArc * 2;
 
             if (jumpProgressRef.current >= 1) {
                 jumpProgressRef.current = 0;
-                meshRef.current.position.y = 0.5;
+                meshRef.current.position.y = PLAYER_ANIM.BASE_Y;
                 land();
             }
+        } else {
+            // Bounce de corrida (quicar) - só quando não está pulando
+            const bounce = Math.sin(t * PLAYER_ANIM.BOUNCE_SPEED) * PLAYER_ANIM.BOUNCE_HEIGHT;
+            meshRef.current.position.y = PLAYER_ANIM.BASE_Y + Math.abs(bounce);
         }
     });
 

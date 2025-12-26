@@ -1,12 +1,28 @@
 /**
  * @fileoverview Tipos e constantes para o sistema de obstáculos
  * Define enums fortemente tipados para evitar Magic Strings
+ * 
+ * CATEGORIAS:
+ * - LETHAL: Morte instantânea (Game Over)
+ * - FINANCIAL: Dano financeiro (pode ficar devendo)
+ * - COLLECTIBLE: Coletáveis (moedas)
  */
 
 /** Tipos de obstáculos no jogo */
 export const enum ObstacleType {
+    /** Obstáculo letal - Game Over imediato */
+    DANGER = "DANGER",
+    /** Obstáculo financeiro - tira dinheiro */
     TAX = "TAX",
+    /** Coletável - dá dinheiro */
     COIN = "COIN",
+}
+
+/** Categoria de dano */
+export const enum DamageCategory {
+    LETHAL = "LETHAL",
+    FINANCIAL = "FINANCIAL",
+    COLLECTIBLE = "COLLECTIBLE",
 }
 
 /** Pistas disponíveis (usando números para facilitar cálculos) */
@@ -16,11 +32,18 @@ export const enum LanePosition {
     RIGHT = 1,
 }
 
+/** Mapeamento de tipo para categoria */
+export const OBSTACLE_CATEGORY: Readonly<Record<ObstacleType, DamageCategory>> = {
+    [ObstacleType.DANGER]: DamageCategory.LETHAL,
+    [ObstacleType.TAX]: DamageCategory.FINANCIAL,
+    [ObstacleType.COIN]: DamageCategory.COLLECTIBLE,
+} as const;
+
 /** Interface de um obstáculo no jogo */
 export interface ObstacleData {
     /** ID único do obstáculo */
     readonly id: string;
-    /** Tipo: TAX (dano) ou COIN (moeda) */
+    /** Tipo: DANGER (morte), TAX (dano) ou COIN (moeda) */
     readonly type: ObstacleType;
     /** Pista onde está (-1, 0, 1) */
     readonly lane: LanePosition;
@@ -40,11 +63,15 @@ export const OBSTACLE_CONSTANTS = {
     BASE_SPAWN_INTERVAL_MS: 1500,
     /** Intervalo mínimo de spawn (ms) */
     MIN_SPAWN_INTERVAL_MS: 500,
-    /** Chance de spawnar moeda (0-1) */
-    COIN_CHANCE: 0.2,
-    /** Dano ao colidir com TAX */
-    TAX_DAMAGE: 100,
-    /** Pontos ao coletar COIN */
+    /** Chances de spawn (deve somar 1.0) */
+    SPAWN_CHANCES: {
+        DANGER: 0.15, // 15% chance de morte
+        TAX: 0.60,    // 60% chance de taxa
+        COIN: 0.25,   // 25% chance de moeda
+    },
+    /** Dano da TAX */
+    TAX_DAMAGE: 150,
+    /** Valor da COIN */
     COIN_VALUE: 50,
     /** Distância de colisão no eixo Z */
     COLLISION_THRESHOLD_Z: 1.2,
@@ -58,6 +85,15 @@ export const OBSTACLE_CONSTANTS = {
 
 /** Cores dos obstáculos */
 export const OBSTACLE_COLORS = {
-    TAX: "#ef4444",
-    COIN: "#fbbf24",
+    DANGER: "#7c3aed", // Roxo - perigo mortal
+    TAX: "#ef4444",    // Vermelho - dinheiro
+    COIN: "#fbbf24",   // Dourado
 } as const;
+
+/** Causa da morte (para Game Over) */
+export const enum DeathCause {
+    /** Colidiu com obstáculo letal */
+    LETHAL_COLLISION = "LETHAL_COLLISION",
+    /** Desistiu (pausa -> sair) */
+    QUIT = "QUIT",
+}

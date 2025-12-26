@@ -13,6 +13,7 @@ import {
     updateHighScoreIfBetter,
     addToTotalMoney,
 } from "../utils/storage";
+import { DeathCause } from "../features/enemies/obstacle.types";
 
 /** Estados possíveis do jogo - evita Magic Strings */
 export const enum GameState {
@@ -55,6 +56,8 @@ interface GameStoreState {
     readonly isNewHighScore: boolean;
     /** Dinheiro coletado nesta partida (para mostrar no Game Over) */
     readonly moneyEarnedThisRun: number;
+    /** Causa da morte (para mostrar no Game Over) */
+    readonly deathCause: DeathCause | null;
 }
 
 interface GameStoreActions {
@@ -82,6 +85,8 @@ interface GameStoreActions {
     setTheme: (theme: GameTheme) => void;
     /** Define o dinheiro total (usado pela loja) */
     setTotalMoney: (amount: number) => void;
+    /** Morte por colisão com obstáculo letal */
+    dieFromCollision: () => void;
     /** Reinicia a partida após Game Over */
     restartGame: () => void;
 }
@@ -99,6 +104,7 @@ const INITIAL_STATE: GameStoreState = {
     highScore: 0,
     isNewHighScore: false,
     moneyEarnedThisRun: 0,
+    deathCause: null,
 };
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -166,24 +172,25 @@ export const useGameStore = create<GameStore>((set, get) => ({
         })),
 
     loseMoney: (amount) => {
-        const { currentMoney, gameState } = get();
+        const { gameState } = get();
 
         // Só processa se o jogo estiver rodando
         if (gameState !== GameState.RUNNING) return;
 
-        const newMoney = currentMoney - amount;
+        // Permite ficar negativo (dívida) - NÃO DÁ GAME OVER
+        set((state) => ({
+            currentMoney: state.currentMoney - amount,
+        }));
+    },
 
-        // Verifica FALÊNCIA (quando fica NEGATIVO)
-        if (newMoney < BANKRUPTCY_THRESHOLD) {
-            // Primeiro atualiza o dinheiro para 0
-            set({ currentMoney: 0 });
-            // Depois chama endGame para processar Game Over
-            get().endGame();
-            return;
-        }
+    /** Morte por colisão com obstáculo letal */
+    dieFromCollision: () => {
+        const { gameState } = get();
+        if (gameState !== GameState.RUNNING) return;
 
-        // Se não faliu, apenas atualiza o dinheiro
-        set({ currentMoney: newMoney });
+        // Seta a causa da morte e chama endGame
+        set({ deathCause: DeathCause.LETHAL_COLLISION });
+        get().endGame();
     },
 
     setSpeed: (speed) => set({ speed }),

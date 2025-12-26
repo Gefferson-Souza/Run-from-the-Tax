@@ -24,9 +24,19 @@ const getRandomLane = (): LanePosition => {
 
 /** Retorna tipo de obstáculo baseado em probabilidade */
 const getRandomObstacleType = (): ObstacleType => {
-    return Math.random() < OBSTACLE_CONSTANTS.COIN_CHANCE
-        ? ObstacleType.COIN
-        : ObstacleType.TAX;
+    const roll = Math.random();
+    const { SPAWN_CHANCES } = OBSTACLE_CONSTANTS;
+
+    // 15% DANGER (morte instantânea)
+    if (roll < SPAWN_CHANCES.DANGER) {
+        return ObstacleType.DANGER;
+    }
+    // 60% TAX (dano financeiro)
+    if (roll < SPAWN_CHANCES.DANGER + SPAWN_CHANCES.TAX) {
+        return ObstacleType.TAX;
+    }
+    // 25% COIN (coletável)
+    return ObstacleType.COIN;
 };
 
 interface ObstacleStoreState {

@@ -7,6 +7,7 @@
 import { View, Text, Pressable, StyleSheet, Platform } from "react-native";
 import { Link, router } from "expo-router";
 import { useGameStore, useObstacleStore } from "../../stores";
+import { DeathCause } from "../enemies/obstacle.types";
 
 /** Cores do design */
 const COLORS = {
@@ -15,18 +16,43 @@ const COLORS = {
     cardDark: "#342618",
     textSecondary: "#cbad90",
     red: "#ef4444",
+    purple: "#7c3aed",
     green: "#22c55e",
     white: "#ffffff",
 } as const;
 
+/** Textos baseados na causa da morte */
+const DEATH_CONTENT: Record<DeathCause, { title: string; subtitle: string; emoji: string; badge: string; causa: string }> = {
+    [DeathCause.LETHAL_COLLISION]: {
+        title: "CPF",
+        subtitle: "CANCELADO!",
+        emoji: "💀🏍️",
+        badge: "GAME OVER",
+        causa: "Dois Caras numa Moto",
+    },
+    [DeathCause.QUIT]: {
+        title: "VOCÊ",
+        subtitle: "DESISTIU!",
+        emoji: "🏳️",
+        badge: "DESISTÊNCIA",
+        causa: "Desistência Voluntária",
+    },
+} as const;
+
 export function GameOverModal(): React.JSX.Element {
     const score = useGameStore((state) => state.score);
+    const currentMoney = useGameStore((state) => state.currentMoney);
     const moneyEarnedThisRun = useGameStore((state) => state.moneyEarnedThisRun);
     const totalMoney = useGameStore((state) => state.totalMoney);
     const highScore = useGameStore((state) => state.highScore);
     const isNewHighScore = useGameStore((state) => state.isNewHighScore);
+    const deathCause = useGameStore((state) => state.deathCause);
     const restartGame = useGameStore((state) => state.restartGame);
     const resetObstacles = useObstacleStore((state) => state.resetObstacles);
+
+    // Conteúdo baseado na causa
+    const content = deathCause ? DEATH_CONTENT[deathCause] : DEATH_CONTENT[DeathCause.LETHAL_COLLISION];
+    const isLethal = deathCause === DeathCause.LETHAL_COLLISION;
 
     const handleRestart = (): void => {
         resetObstacles();
@@ -40,29 +66,31 @@ export function GameOverModal(): React.JSX.Element {
     return (
         <View style={styles.overlay}>
             <View style={styles.container}>
-                {/* Badge "Fim da Linha" */}
-                <View style={styles.badge}>
-                    <Text style={styles.badgeText}>FIM DA LINHA</Text>
+                {/* Badge */}
+                <View style={[styles.badge, isLethal && styles.badgeLethal]}>
+                    <Text style={[styles.badgeText, isLethal && styles.badgeTextLethal]}>{content.badge}</Text>
                 </View>
 
                 {/* Título */}
                 <Text style={styles.title}>
-                    FALÊNCIA{"\n"}
-                    <Text style={styles.titleHighlight}>DECRETADA!</Text>
+                    {content.title}{"\n"}
+                    <Text style={[styles.titleHighlight, isLethal && styles.titleLethal]}>{content.subtitle}</Text>
                 </Text>
 
-                {/* Subtítulo */}
+                {/* Subtítulo com saldo */}
                 <Text style={styles.subtitle}>
-                    O Leão te pegou na malha fina.{"\n"}
-                    Seu poder de compra chegou a zero.
+                    {isLethal ? "Você não sobreviveu às ruas do Brasil." : "Você desistiu da corrida."}{"\n"}
+                    Saldo final: <Text style={currentMoney < 0 ? styles.debtText : styles.positiveText}>
+                        R$ {currentMoney.toLocaleString("pt-BR")}
+                    </Text>
                 </Text>
 
                 {/* Imagem/Ícone */}
                 <View style={styles.imageContainer}>
-                    <Text style={styles.sadEmoji}>😭💸</Text>
+                    <Text style={styles.sadEmoji}>{content.emoji}</Text>
                     <View style={styles.causaBadge}>
                         <Text style={styles.causaLabel}>⚖️ Causa Mortis</Text>
-                        <Text style={styles.causaText}>Sonegação Fiscal</Text>
+                        <Text style={styles.causaText}>{content.causa}</Text>
                     </View>
                 </View>
 
@@ -171,12 +199,30 @@ const styles = StyleSheet.create({
     titleHighlight: {
         color: COLORS.primary,
     },
+    titleLethal: {
+        color: COLORS.purple,
+    },
     subtitle: {
         color: COLORS.textSecondary,
         fontSize: 14,
         textAlign: "center",
         marginTop: 8,
         lineHeight: 20,
+    },
+    debtText: {
+        color: COLORS.red,
+        fontWeight: "bold",
+    },
+    positiveText: {
+        color: COLORS.green,
+        fontWeight: "bold",
+    },
+    badgeLethal: {
+        backgroundColor: "rgba(124, 58, 237, 0.2)",
+        borderColor: "rgba(124, 58, 237, 0.5)",
+    },
+    badgeTextLethal: {
+        color: COLORS.purple,
     },
     imageContainer: {
         width: "100%",
