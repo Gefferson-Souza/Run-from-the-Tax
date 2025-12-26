@@ -80,6 +80,8 @@ interface GameStoreActions {
     setSpeed: (speed: number) => void;
     /** Muda o tema do jogo */
     setTheme: (theme: GameTheme) => void;
+    /** Define o dinheiro total (usado pela loja) */
+    setTotalMoney: (amount: number) => void;
     /** Reinicia a partida após Game Over */
     restartGame: () => void;
 }
@@ -187,6 +189,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
     setSpeed: (speed) => set({ speed }),
 
     setTheme: (theme) => set({ theme }),
+
+    setTotalMoney: (amount) => {
+        saveTotalMoney(amount);
+        set({ totalMoney: amount });
+    },
 
     restartGame: () => {
         // Carrega dados persistidos antes de reiniciar
