@@ -14,6 +14,7 @@ import { useGameStore, usePlayerStore, useObstacleStore, Lane, GameState } from 
 import { GameOverModal, PauseModal } from "../src/features/ui";
 import { Obstacles, LanePosition, OBSTACLE_CONSTANTS, ObstacleType } from "../src/features/enemies";
 import { GameLoop } from "../src/features/game";
+import { PlayerSprite } from "../src/features/player";
 
 /** Cores do jogo */
 const COLORS = {
@@ -257,7 +258,7 @@ export default function GameScreen(): React.JSX.Element {
 
                     {/* Cena */}
                     <TrackFloor />
-                    <PlayerCube />
+                    <PlayerSprite />
                     <Obstacles />
 
                     {/* Game Loop (lógica) */}
