@@ -151,15 +151,19 @@ export default function GameScreen(): React.JSX.Element {
                     <fog attach="fog" args={[currentBiome.fogColor, 10, 60]} />
 
                     {/* Luzes */}
-                    <ambientLight intensity={0.5} />
-                    <pointLight position={[10, 10, 10]} intensity={1} />
+                    {/* Luzes - Ambientação melhorada */}
+                    <ambientLight intensity={0.8} /> {/* Base mais clara para evitar preto absoluto */}
+
+                    {/* Sol atrás do personagem (Z positivo) */}
                     <directionalLight
-                        position={[5, 10, 5]}
-                        intensity={0.8}
+                        position={[0, 15, 10]} // Alto e atrás da câmera
+                        intensity={1.5}
                         castShadow
-                        shadow-mapSize={[1024, 1024]}
-                        shadow-bias={-0.0001}
-                    />
+                        shadow-mapSize={[2048, 2048]} // Sombras mais definidas
+                        shadow-bias={-0.0005}
+                    >
+                        <orthographicCamera attach="shadow-camera" args={[-20, 20, 20, -20]} />
+                    </directionalLight>
 
                     {/* Cena */}
                     <Sky />

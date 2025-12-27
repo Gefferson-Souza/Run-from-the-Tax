@@ -9,14 +9,18 @@ import * as THREE from "three";
 import { useBiome } from "../game/useBiome";
 import { GameTheme } from "../game/biome.types";
 import { InstancedCity } from "./InstancedCity";
+import { InstancedVegetation } from "./InstancedVegetation";
 
 export function Scenery(): React.JSX.Element {
     const biome = useBiome();
 
     return (
         <group>
-            {/* Prédios/Cenário procedurais otimizados */}
+            {/* Prédios (Cidade Rica/Favela) */}
             <InstancedCity />
+
+            {/* Vegetação (Estrada/Rural) - Adiciona vida extra no ambiente */}
+            <InstancedVegetation />
         </group>
     );
 }
