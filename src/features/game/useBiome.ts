@@ -14,16 +14,20 @@ export function useBiome(): BiomeConfig {
     const score = useGameStore((state) => state.score);
 
     const theme = useMemo(() => {
-        // Ciclo: RICH -> FAVELA -> RURAL -> Repete
-        const cycle = Math.floor(score / BIOME_CHANGE_INTERVAL) % 3;
+        // [MODO DEBUG] Travado em RICH_CITY para performance e estabilidade
+        return GameTheme.RICH_CITY;
 
+        /* 
+        // Lógica de transição desativada temporariamente
+        const cycle = Math.floor(score / BIOME_CHANGE_INTERVAL) % 3;
         switch (cycle) {
             case 0: return GameTheme.RICH_CITY;
             case 1: return GameTheme.FAVELA;
             case 2: return GameTheme.RURAL;
             default: return GameTheme.RICH_CITY;
         }
-    }, [Math.floor(score / BIOME_CHANGE_INTERVAL)]); // Otimização: só recalcula se mudar o intervalo
+        */
+    }, []); // Sem dependências para não recalcular
 
     return BIOME_CONFIGS[theme];
 }

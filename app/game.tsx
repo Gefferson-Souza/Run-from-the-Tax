@@ -14,6 +14,7 @@ import { GameOverModal, PauseModal } from "../src/features/ui";
 import { GameLoop } from "../src/features/game/GameLoop";
 import { PlayerSprite } from "../src/features/player/PlayerSprite";
 import { Scenery } from "../src/features/environment/Scenery";
+import { Sky } from "../src/features/environment/Sky";
 import { Track } from "../src/features/track/Track";
 import { Obstacles } from "../src/features/enemies/Obstacles";
 import { useGameAudio } from "../src/features/audio/useGameAudio";
@@ -148,10 +149,17 @@ export default function GameScreen(): React.JSX.Element {
 
                     {/* Luzes */}
                     <ambientLight intensity={0.5} />
-                    <pointLight position={[10, 10, 10]} intensity={1} castShadow />
-                    <directionalLight position={[5, 10, 5]} intensity={0.8} castShadow />
+                    <pointLight position={[10, 10, 10]} intensity={1} />
+                    <directionalLight
+                        position={[5, 10, 5]}
+                        intensity={0.8}
+                        castShadow
+                        shadow-mapSize={[1024, 1024]}
+                        shadow-bias={-0.0001}
+                    />
 
                     {/* Cena */}
+                    <Sky />
                     <Track />
                     <Scenery />
                     <PlayerSprite />

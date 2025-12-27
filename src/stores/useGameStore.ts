@@ -57,7 +57,8 @@ interface GameStoreState {
     /** Dinheiro coletado nesta partida (para mostrar no Game Over) */
     readonly moneyEarnedThisRun: number;
     /** Causa da morte (para mostrar no Game Over) */
-    readonly deathCause: DeathCause | null;
+    /** Causa da morte (para mostrar no Game Over) */
+    readonly deathCause: string | null;
 }
 
 interface GameStoreActions {
@@ -184,12 +185,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
     },
 
     /** Morte por colisão com obstáculo letal */
-    dieFromCollision: () => {
+    /** Morte por colisão com obstáculo letal */
+    dieFromCollision: (cause?: string) => {
         const { gameState } = get();
         if (gameState !== GameState.RUNNING) return;
 
         // Seta a causa da morte e chama endGame
-        set({ deathCause: DeathCause.LETHAL_COLLISION });
+        // Se vier uma causa específica (string), usa ela. Senão usa o padrão.
+        set({ deathCause: cause || DeathCause.LETHAL_COLLISION });
         get().endGame();
     },
 

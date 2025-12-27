@@ -22,7 +22,7 @@ const COLORS = {
 } as const;
 
 /** Textos baseados na causa da morte */
-const DEATH_CONTENT: Record<DeathCause, { title: string; subtitle: string; emoji: string; badge: string; causa: string }> = {
+const DEATH_CONTENT: Record<string, { title: string; subtitle: string; emoji: string; badge: string; causa: string }> = {
     [DeathCause.LETHAL_COLLISION]: {
         title: "CPF",
         subtitle: "CANCELADO!",
@@ -37,7 +37,15 @@ const DEATH_CONTENT: Record<DeathCause, { title: string; subtitle: string; emoji
         badge: "DESISTÊNCIA",
         causa: "Desistência Voluntária",
     },
-} as const;
+    // Fallback genérico se adicionar novos tipos sem mapear
+    "DEFAULT": {
+        title: "FALÊNCIA",
+        subtitle: "TOTAL!",
+        emoji: "💸",
+        badge: "SEM GRANA",
+        causa: "Dívida Impagável",
+    }
+};
 
 export function GameOverModal(): React.JSX.Element {
     const score = useGameStore((state) => state.score);
@@ -51,7 +59,23 @@ export function GameOverModal(): React.JSX.Element {
     const resetObstacles = useObstacleStore((state) => state.resetObstacles);
 
     // Conteúdo baseado na causa
-    const content = deathCause ? DEATH_CONTENT[deathCause] : DEATH_CONTENT[DeathCause.LETHAL_COLLISION];
+    let content = DEATH_CONTENT["DEFAULT"];
+
+    if (deathCause) {
+        if (deathCause in DEATH_CONTENT) {
+            content = DEATH_CONTENT[deathCause];
+        } else {
+            // Se for uma string customizada (ex: passada pelo obstáculo)
+            // Tenta ver se é uma das mensagens pré-definidas ou usa como "Causa"
+            content = {
+                title: "VOCÊ",
+                subtitle: "MORREU!",
+                emoji: "💀",
+                badge: "FATALIDADE",
+                causa: deathCause, // Usa a string passada como a causa
+            };
+        }
+    }
     const isLethal = deathCause === DeathCause.LETHAL_COLLISION;
 
     const handleRestart = (): void => {

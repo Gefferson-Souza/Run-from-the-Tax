@@ -13,7 +13,7 @@ import {
     OBSTACLE_CONSTANTS,
     getCategory,
 } from "./obstacle.types";
-import { ObstacleSprite } from "./ObstacleSprite";
+import { Obstacle3D } from "./Obstacle3D";
 
 interface ObstacleProps {
     readonly type: ObstacleType;
@@ -45,10 +45,10 @@ export function Obstacle({
     const xPosition = OBSTACLE_CONSTANTS.LANE_X_POSITIONS[lane];
 
     // Animações por categoria
-    useFrame(({ clock }) => {
+    useFrame((state: { clock: { elapsedTime: number; getElapsedTime: () => number } }) => {
         if (!groupRef.current) return;
 
-        const t = clock.getElapsedTime();
+        const t = state.clock.getElapsedTime();
 
         // 1. Posição Base (pode ser modificada pelas animações)
         let newY = ANIM.BASE_Y;
@@ -80,13 +80,7 @@ export function Obstacle({
 
     return (
         <group ref={groupRef} position={[xPosition, ANIM.BASE_Y, zPosition]}>
-            <ObstacleSprite type={type} />
-
-            {/* Sombra simples no chão */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -ANIM.BASE_Y + 0.02, 0]}>
-                <circleGeometry args={[0.4, 32]} />
-                <meshBasicMaterial color="black" transparent opacity={0.3} />
-            </mesh>
+            <Obstacle3D type={type} category={category} />
         </group>
     );
 }
