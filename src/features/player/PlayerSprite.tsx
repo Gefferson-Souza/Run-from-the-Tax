@@ -159,10 +159,10 @@ export function PlayerSprite(): React.JSX.Element {
         }
     });
 
-    // Loading state
+    // Loading state fallback (Animated)
     if (!isLoaded || textures.length === 0) {
         return (
-            <mesh position={[0, CONFIG.BASE_Y, 0]}>
+            <mesh ref={spriteRef as any} position={[0, CONFIG.BASE_Y, 0]}>
                 <boxGeometry args={[0.8, 1.2, 0.4]} />
                 <meshStandardMaterial color="#f48c25" />
             </mesh>

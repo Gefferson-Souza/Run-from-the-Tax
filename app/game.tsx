@@ -16,7 +16,8 @@ import { PlayerSprite } from "../src/features/player/PlayerSprite";
 import { Scenery } from "../src/features/environment/Scenery";
 import { Sky } from "../src/features/environment/Sky";
 import { Track } from "../src/features/track/Track";
-import { Obstacles } from "../src/features/enemies/Obstacles";
+import { InstancedObstacles } from "../src/features/3d/instancing/InstancedObstacles";
+import { AssetPreloader } from "../src/features/3d/AssetPreloader";
 import { useGameAudio } from "../src/features/audio/useGameAudio";
 import { useBiome } from "../src/features/game/useBiome";
 
@@ -138,6 +139,7 @@ export default function GameScreen(): React.JSX.Element {
     return (
         <GestureDetector gesture={panGesture}>
             <View style={styles.container}>
+                <AssetPreloader />
                 {/* Canvas 3D */}
                 <Canvas
                     shadows
@@ -146,6 +148,7 @@ export default function GameScreen(): React.JSX.Element {
                     gl={{ antialias: true }}
                 >
                     <color attach="background" args={[currentBiome.fogColor]} />
+                    <fog attach="fog" args={[currentBiome.fogColor, 10, 60]} />
 
                     {/* Luzes */}
                     <ambientLight intensity={0.5} />
@@ -163,7 +166,7 @@ export default function GameScreen(): React.JSX.Element {
                     <Track />
                     <Scenery />
                     <PlayerSprite />
-                    <Obstacles />
+                    <InstancedObstacles />
 
                     {/* Game Loop (lógica) */}
                     <GameLoop

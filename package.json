@@ -40,8 +40,12 @@
     "zustand": "^4.4.7"
   },
   "devDependencies": {
+    "@gltf-transform/core": "^4.2.1",
+    "@gltf-transform/extensions": "^4.2.1",
+    "@gltf-transform/functions": "^4.2.1",
     "@types/react": "~19.1.0",
     "@types/three": "^0.182.0",
+    "draco3d": "^1.5.7",
     "typescript": "~5.9.2"
   },
   "private": true

@@ -8,15 +8,15 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useBiome } from "../game/useBiome";
 import { GameTheme } from "../game/biome.types";
-import { CityScenery } from "./BuildingGenerator";
+import { InstancedCity } from "./InstancedCity";
 
 export function Scenery(): React.JSX.Element {
     const biome = useBiome();
 
     return (
         <group>
-            {/* Prédios/Cenário baseado no bioma */}
-            <CityScenery biomeId={biome.id} />
+            {/* Prédios/Cenário procedurais otimizados */}
+            <InstancedCity />
         </group>
     );
 }
